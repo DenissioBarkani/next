@@ -1,0 +1,5 @@
+"use client";
+import { Dialog,DialogTrigger,DialogContent,DialogTitle,DialogDescription,DialogClose } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import type { ProjectMedia } from "@/entities/project/model/projects";
+export function MediaGallery({items}:{items:ProjectMedia[]}){return <div className="media-grid">{items.map(item=><figure className="media-item" key={item.src}>{item.type==="video"?<video controls preload="metadata" poster={item.poster}><source src={item.src}/></video>:<Dialog><DialogTrigger asChild><button type="button" aria-label={`Увеличить: ${item.caption}`}><img src={item.src} alt={item.caption} loading="lazy"/></button></DialogTrigger><DialogContent className="media-dialog" showCloseButton={false}><DialogTitle>{item.caption}</DialogTitle><DialogDescription className="sr-only">Изображение проекта в увеличенном размере.</DialogDescription><img src={item.src} alt={item.caption}/><DialogClose asChild><Button variant="outline">Закрыть</Button></DialogClose></DialogContent></Dialog>}<figcaption>{item.caption}</figcaption></figure>)}</div>}

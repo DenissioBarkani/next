@@ -9,9 +9,9 @@ type Ripple = { x: number; y: number; age: number };
 type Signal = { a: number; b: number; t: number };
 
 const colors = {
-  node: [139, 147, 167],
-  link: [124, 92, 255],
-  signal: [0, 229, 160],
+  node: [107, 130, 205],
+  link: [76, 91, 255],
+  signal: [151, 94, 255],
 } as const satisfies Record<string, Rgb>;
 
 const baseSpeed = 0.22;
