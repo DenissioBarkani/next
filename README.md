@@ -14,7 +14,7 @@ npm run build
 
 ## Медиа для проектов
 
-Исходники складывайте в `media-source/projects/<slug>/` и запускайте `npm run media:prepare -- <slug>`. Скрипт FFmpeg создаёт WebP для изображений, H.264 MP4 и обложку WebP для видео в `public/projects/<slug>/`.
+Исходники складывайте в `media-source/projects/<slug>/` и запускайте `npm run media:prepare -- <slug>`. Скрипт создаёт WebP для изображений; при установленном FFmpeg он также подготовит H.264 MP4 и обложку WebP для видео в `public/projects/<slug>/`.
 
 Инструкция по установке FFmpeg, доступным форматам и добавлению готовых файлов в контент: [docs/media.md](docs/media.md).
 

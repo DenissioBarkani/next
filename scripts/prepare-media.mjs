@@ -1,4 +1,4 @@
-import { access, mkdir, readdir, stat, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,7 @@ const SOURCE_ROOT = path.join(ROOT, "media-source", "projects");
 const OUTPUT_ROOT = path.join(ROOT, "public", "projects");
 const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp"]);
 const VIDEO_EXTENSIONS = new Set([".mp4", ".mov", ".m4v", ".webm"]);
+const METADATA_FILES = new Set(["media-manifest.json", "media-options.json"]);
 const args = process.argv.slice(2);
 const force = args.includes("--force");
 const requestedSlugs = args.filter((argument) => argument !== "--force");
@@ -72,6 +73,21 @@ async function findFiles(directory) {
   return nested.flat();
 }
 
+async function projectMediaOptions(projectSourcePath) {
+  const optionsPath = path.join(projectSourcePath, "media-options.json");
+  if (!(await exists(optionsPath))) return { images: {} };
+  const options = JSON.parse(await readFile(optionsPath, "utf8"));
+  if (!options.images || typeof options.images !== "object") return { images: {} };
+  return options;
+}
+
+function cropTopFor(sourcePath, projectSourcePath, options) {
+  const relativePath = path.relative(projectSourcePath, sourcePath).split(path.sep).join("/");
+  const cropTop = options.images[relativePath]?.cropTop ?? 0;
+  if (!Number.isInteger(cropTop) || cropTop < 0) throw new Error(`Некорректный cropTop для ${relativePath}`);
+  return cropTop;
+}
+
 async function probeVideo(filePath) {
   const result = await capture("ffprobe", [
     "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height,duration", "-of", "json", filePath,
@@ -108,14 +124,16 @@ function assertNoOutputCollisions(files, projectSourcePath, projectOutputPath) {
   }
 }
 
-async function prepareImage(sourcePath, targetPath) {
+async function prepareImage(sourcePath, targetPath, cropTop) {
   if (!(await needsUpdate(sourcePath, [targetPath]))) return false;
   await mkdir(path.dirname(targetPath), { recursive: true });
-  await sharp(sourcePath)
-    .rotate()
-    .resize({ width: 2400, withoutEnlargement: true })
-    .webp({ quality: 82 })
-    .toFile(targetPath);
+  let image = sharp(sourcePath).rotate();
+  if (cropTop > 0) {
+    const metadata = await image.metadata();
+    if (!metadata.width || !metadata.height || cropTop >= metadata.height) throw new Error(`Нельзя обрезать ${cropTop}px у ${path.relative(ROOT, sourcePath)}`);
+    image = image.extract({ left: 0, top: cropTop, width: metadata.width, height: metadata.height - cropTop });
+  }
+  await image.resize({ width: 2400, withoutEnlargement: true }).webp({ quality: 82 }).toFile(targetPath);
   return true;
 }
 
@@ -135,11 +153,13 @@ async function prepareVideo(sourcePath, targetPath, posterPath) {
   return true;
 }
 
-async function verifyVideoTools() {
+async function videoToolsAvailable() {
   try {
     await Promise.all([capture("ffmpeg", ["-version"]), capture("ffprobe", ["-version"])]);
+    return true;
   } catch {
-    throw new Error("Не найден FFmpeg. Он нужен только для видео: установите его и убедитесь, что команды ffmpeg и ffprobe доступны в PATH. Подробности: docs/media.md");
+    console.warn("FFmpeg не найден: видео пропущены. Установите ffmpeg и ffprobe, затем снова запустите npm run media:prepare -- <slug>.");
+    return false;
   }
 }
 
@@ -156,12 +176,13 @@ async function getProjectSlugs() {
 async function prepareProject(slug) {
   const projectSourcePath = path.join(SOURCE_ROOT, slug);
   const projectOutputPath = path.join(OUTPUT_ROOT, slug);
+  const options = await projectMediaOptions(projectSourcePath);
   const allFiles = await findFiles(projectSourcePath);
   const files = allFiles.filter((filePath) => {
     const extension = path.extname(filePath).toLowerCase();
     return IMAGE_EXTENSIONS.has(extension) || VIDEO_EXTENSIONS.has(extension);
   });
-  const unsupported = allFiles.filter((filePath) => !files.includes(filePath));
+  const unsupported = allFiles.filter((filePath) => !files.includes(filePath) && !METADATA_FILES.has(path.basename(filePath)));
   if (unsupported.length > 0) console.warn(`Пропущены неподдерживаемые файлы в ${slug}: ${unsupported.map((filePath) => path.basename(filePath)).join(", ")}`);
   if (files.length === 0) {
     console.warn(`В ${slug} нет поддерживаемых изображений или видео.`);
@@ -169,7 +190,9 @@ async function prepareProject(slug) {
   }
 
   assertNoOutputCollisions(files, projectSourcePath, projectOutputPath);
-  if (files.some((filePath) => VIDEO_EXTENSIONS.has(path.extname(filePath).toLowerCase()))) await verifyVideoTools();
+  const canPrepareVideos = files.some((filePath) => VIDEO_EXTENSIONS.has(path.extname(filePath).toLowerCase()))
+    ? await videoToolsAvailable()
+    : true;
   const manifest = [];
   let changed = 0;
   for (const sourcePath of files) {
@@ -177,11 +200,15 @@ async function prepareProject(slug) {
     const base = outputBase(sourcePath, projectSourcePath, projectOutputPath);
     if (IMAGE_EXTENSIONS.has(extension)) {
       const targetPath = `${base}.webp`;
-      if (await prepareImage(sourcePath, targetPath)) changed += 1;
+      if (await prepareImage(sourcePath, targetPath, cropTopFor(sourcePath, projectSourcePath, options))) changed += 1;
       const metadata = await sharp(targetPath).metadata();
       if (!metadata.width || !metadata.height) throw new Error(`Не удалось определить размеры: ${path.relative(ROOT, targetPath)}`);
       manifest.push({ type: "image", src: publicPath(targetPath), width: metadata.width, height: metadata.height });
     } else {
+      if (!canPrepareVideos) {
+        console.warn(`Пропущено видео: ${path.relative(ROOT, sourcePath)}`);
+        continue;
+      }
       const targetPath = `${base}.mp4`;
       const posterPath = `${base}-poster.webp`;
       if (await prepareVideo(sourcePath, targetPath, posterPath)) changed += 1;

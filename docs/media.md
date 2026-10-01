@@ -28,6 +28,18 @@ ffprobe -version
 4. Готовые файлы будут в `public/projects/<slug>/`. Исходники и `media-manifest.json` находятся в игнорируемой Git папке `media-source/`.
 5. Откройте `media-source/projects/<slug>/media-manifest.json` и добавьте элементы в `media` нужного проекта в `content/projects.ts`. Для изображений заполните `alt` и `caption`, для видео — `caption`.
 
+Чтобы убрать рамку браузера с отдельных скриншотов, создайте рядом с ними `media-options.json`:
+
+```json
+{
+  "images": {
+    "screen.jpg": { "cropTop": 58 }
+  }
+}
+```
+
+После изменения правил обрезки запустите команду с `--force`.
+
 Пример записи:
 
 ```ts
