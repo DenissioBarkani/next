@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Braces, Code2, Component, Layers, PenTool, type LucideIcon } from "lucide-react";
 import type { Project } from "@/content/projects";
+import { projectKindLabel } from "@/lib/projects";
 
 const icons = {
   layers: Layers,
@@ -17,11 +18,11 @@ type ProjectCoverProps = {
 
 export function ProjectCover({ project, detail = false }: ProjectCoverProps) {
   const { cover } = project;
-  const headline = cover.headline.replaceAll(".", "");
+  const headline = (project.cardHeadline ?? cover.label).replaceAll(".", "").replaceAll(" ", "\n");
   const Icon = icons[cover.icon];
   const sizes = detail
     ? "(max-width: 700px) calc(100vw - 40px), (max-width: 1000px) 35vw, 420px"
     : "(max-width: 700px) calc(100vw - 40px), 50vw";
 
-  return <div className={`project-cover cover-${cover.tone} ${detail ? "cover-detail" : ""}`}>{cover.image ? <Image src={cover.image.src} alt={cover.image.alt} width={cover.image.width} height={cover.image.height} sizes={sizes} className="cover-image"/> : <><div className="cover-grid"/><div className="cover-top"><span>{cover.label}</span><Icon size={23} strokeWidth={1.4}/></div><div className="cover-type">{headline}</div><div className="cover-bottom"><span>{cover.technology}</span><span className="cover-symbol" aria-hidden="true">{cover.symbol}</span></div></>}</div>;
+  return <div className={`project-cover cover-${cover.tone} ${detail ? "cover-detail" : ""}`}>{cover.image ? <Image src={cover.image.src} alt={cover.image.alt} width={cover.image.width} height={cover.image.height} sizes={sizes} className="cover-image"/> : <><div className="cover-grid"/><div className="cover-top"><span className="cover-kind">{projectKindLabel(project)}</span><Icon size={23} strokeWidth={1.4}/></div><div className="cover-type">{headline}</div><div className="cover-bottom"><span>{cover.technology}</span><span className="cover-symbol" aria-hidden="true">{cover.symbol}</span></div></>}</div>;
 }

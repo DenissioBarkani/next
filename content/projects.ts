@@ -57,6 +57,7 @@ export type Project = {
   readonly description: string;
   readonly heroNote?: string;
   readonly role: string;
+  readonly cardHeadline?: string;
   readonly stack: readonly string[];
   readonly tasks: readonly ProjectTask[];
   readonly decisions: readonly { title: string; text: string }[];
@@ -152,6 +153,7 @@ const projectContentOverrides: Readonly<Record<string, Partial<Project>>> = {
   "center-invest": {
     title: "Панель управления HR Telegram-ботами",
     shortTitle: "HR Telegram-боты",
+    cardHeadline: "Управление\nTelegram-ботами.",
     summary: "Внутренний прототип панели для управления HR Telegram-ботами: анкеты и ответы кандидатов.",
     description: "Внутренний прототип для практики в банке «Центр-инвест»: frontend-панель для настройки HR Telegram-ботов и просмотра ответов кандидатов. В рабочие процессы банка не внедрялся.",
     role: "Frontend-разработчик · практика в «Центр-инвест»",
