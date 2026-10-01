@@ -57,7 +57,6 @@ export function Ambient() {
       ))}
       <div className="ambient-caption">
         <span>Интерфейсы + логика</span>
-        <span>01 / 05</span>
       </div>
     </div>
   );

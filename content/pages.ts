@@ -1,15 +1,18 @@
 export const homePage = {
   hero: {
-    eyebrow: "Vue · React · TypeScript",
-    title: "Frontend.",
-    titleLines: ["От макета", "до продукта."],
+    eyebrow: "Около года коммерческой разработки",
+    title: "Frontend-",
+    titleLine: "разработчик.",
     intro:
-      "Я Денис Баркалов. Разрабатываю интерфейсы, подключаю API и собираю переиспользуемые компоненты.",
+      "Мне важно понимать смысл решений в интерфейсе и видеть их пользу для людей. Люблю изучать новые подходы и проверять их на практике. Ценю работу в команде и обратную связь — они помогают развиваться и улучшать результат.",
     workLink: "#projects",
     workLabel: "Смотреть работы",
-    footnote: ["Ростов-на-Дону", "Рассматриваю работу в команде"],
+    status: "Открыт к предложениям · Ростов-на-Дону",
   },
-  technology: ["Vue 3", "Nuxt", "React", "Next.js", "TypeScript", "Tailwind CSS", "REST API"],
+  technology: {
+    primary: ["Vue 3", "Nuxt", "TypeScript", "Tailwind CSS", "REST API"],
+    secondary: ["React", "Next.js"],
+  },
   experience: {
     eyebrow: "02 / Опыт",
     title: "От задач — к интерфейсам",
