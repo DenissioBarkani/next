@@ -5,5 +5,7 @@ export const profile = {
   focus: ["Vue / Nuxt", "React / Next.js", "TypeScript", "REST-интеграции"],
   phone: "+7 (918) 546-32-01",
   phoneHref: "tel:+79185463201",
+  email: "dbarkalovuc@gmail.com",
+  telegram: "https://t.me/DenissioBarkaniBH",
   github: "https://github.com/DenissioBarkani",
 } as const;
