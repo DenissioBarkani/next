@@ -1,8 +1,11 @@
-import { ContactPanel } from "@/widgets/contact-panel/ui/contact-panel";
-import { AdditionalDirections } from "@/widgets/additional-directions/ui/additional-directions";
-import { EducationOverview } from "@/widgets/education-overview/ui/education-overview";
-import { ExperienceOverview } from "@/widgets/experience-overview/ui/experience-overview";
-import { Hero } from "@/widgets/hero/ui/hero";
-import { ProjectShowcase } from "@/widgets/project-showcase/ui/project-showcase";
+import { AdditionalDirections } from "@/components/sections/additional-directions";
+import { ContactPanel } from "@/components/sections/contact-panel";
+import { EducationOverview } from "@/components/sections/education-overview";
+import { ExperienceOverview } from "@/components/sections/experience-overview";
+import { Hero } from "@/components/sections/hero";
+import { ProjectShowcase } from "@/components/sections/project-showcase";
+import { homePage } from "@/content/pages";
+import { projects } from "@/content/projects";
+import { site } from "@/content/site";
 
-export default function Home() { return <main id="main"><Hero /><section className="tech-strip"><div className="shell"><span>Основной стек</span><b>Vue 3</b><b>Nuxt</b><b>React</b><b>Next.js</b><b>TypeScript</b><b>Tailwind CSS</b><b>REST API</b></div></section><ProjectShowcase /><ExperienceOverview /><EducationOverview /><AdditionalDirections /><ContactPanel /></main>; }
+export default function Home() { return <main id="main"><Hero data={homePage.hero} profile={site.profile}/><section className="tech-strip"><div className="shell"><span>Основной стек</span>{homePage.technology.map((item) => <b key={item}>{item}</b>)}</div></section><ProjectShowcase projects={projects}/><ExperienceOverview data={homePage.experience} projects={projects}/><EducationOverview data={homePage.education}/><AdditionalDirections data={homePage.directions}/><ContactPanel data={homePage.contacts} profile={site.profile}/></main>; }

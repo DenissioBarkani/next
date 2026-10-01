@@ -1,4 +1,0 @@
-import { AudioLines, Braces } from "lucide-react";
-import Link from "next/link";
-
-export function AdditionalDirections() { return <section className="section shell"><div className="section-heading"><div><p className="eyebrow">04 / Дополнительные направления</p><h2>За пределами frontend</h2></div></div><div className="more-grid"><Link href="/more#analysis" className="more-card"><Braces size={27}/><h3>Системный анализ</h3><p>Требования, бизнес-процессы, UML и BPMN. Кейсы из проектной работы.</p><span className="text-link">Посмотреть подробнее <span aria-hidden="true">+</span></span></Link><Link href="/more#video" className="more-card"><AudioLines size={27}/><h3>Видео и контент</h3><p>Видеомонтаж, графика и опыт создания контента для YouTube.</p><span className="text-link">Посмотреть подробнее <span aria-hidden="true">+</span></span></Link></div></section>; }

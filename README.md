@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Портфолио Дениса Баркалова
 
-## Getting Started
+Статичное портфолио на Next.js App Router, TypeScript, Tailwind CSS и shadcn/ui.
 
-First, run the development server:
+## Команды
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run test
+npx tsc --noEmit --incremental false
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`next build` использует стандартный runtime Next.js. Сайт рассчитан на публикацию как обычное Next-приложение; canonical URL задан в `content/site.ts`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Структура
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/` — маршруты Next.js, metadata, sitemap и общие CSS imports.
+- `components/site/` — общая оболочка сайта.
+- `components/sections/` — серверные секции страниц.
+- `components/project/` — карточка, обложка и detail-page проекта.
+- `components/client/` — локальная интерактивность: canvas, анимация, галерея и просмотр кода.
+- `components/ui/` — shadcn primitives.
+- `content/` — типизированный контент и ссылки без JSX.
+- `lib/` — чистые helpers.
 
-## Learn More
+## Добавление проекта
 
-To learn more about Next.js, take a look at the following resources:
+1. Поместите изображения и видео в `public/projects/<slug>/`.
+2. Добавьте одну запись в `content/projects.ts` с уникальным `slug`, `cover`, описанием, ссылками и медиа.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Каталог автоматически создаёт карточку, страницу `/projects/<slug>`, static params, sitemap и следующий проект. Добавьте поле `timeline`, если проект должен появиться в блоке опыта на главной.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Для изображений укажите `src`, `alt`, `caption`, `width` и `height`; это сохраняет корректное соотношение сторон и предотвращает layout shift.
