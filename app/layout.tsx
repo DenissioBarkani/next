@@ -8,4 +8,4 @@ import "./globals.css";
 
 export const metadata: Metadata = { title: { default: site.metadata.defaultTitle, template: site.metadata.titleTemplate }, description: site.metadata.description, icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" } };
 
-export default function RootLayout({ children }: LayoutProps<"/">) { return <html lang="ru"><body><ParticleField /><div className="site-chrome"><a className="skip-link" href="#main">К содержимому</a><ContactBar profile={site.profile}/><SiteHeader profile={site.profile} navigation={site.navigation}/>{children}<SiteFooter profile={site.profile} year={site.footerYear}/></div></body></html>; }
+export default function RootLayout({ children }: LayoutProps<"/">) { return <html lang="ru"><body><ParticleField /><div className="site-chrome"><a className="skip-link" href="#main">К содержимому</a><ContactBar profile={site.profile}/><SiteHeader profile={site.profile} navigation={site.navigation}/>{children}<SiteFooter profile={site.profile} year={site.footerYear}/></div></body></html>; }

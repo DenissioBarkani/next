@@ -21,7 +21,7 @@ export const site = {
   navigation: [
     { href: "/#projects", label: "Работы" },
     { href: "/#experience", label: "Опыт" },
-    { href: "/#about", label: "Обо мне" },
+    { href: "/#about", label: "Обо мне" },
   ],
   footerYear: "2026",
 } as const;

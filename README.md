@@ -39,3 +39,8 @@ npm run build
 Каталог автоматически создаёт карточку, страницу `/projects/<slug>`, static params, sitemap и следующий проект. Добавьте поле `timeline`, если проект должен появиться в блоке опыта на главной.
 
 Для изображений укажите `src`, `alt`, `caption`, `width` и `height`; это сохраняет корректное соотношение сторон и предотвращает layout shift.
+# Phone protection on Vercel
+
+The phone reveal uses Yandex SmartCaptcha and the `POST /api/contacts` Route Handler. Set the variables listed in [`.env.example`](.env.example) in Vercel. Add the production domain and `localhost` (for local testing) to the allowed domains of the SmartCaptcha site key.
+
+The handler returns `Cache-Control: no-store`; its in-memory rate limit protects one warm serverless instance. For a distributed production limit, connect a Vercel KV/Upstash limiter.
