@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { AnchorNavigation } from "@/components/client/anchor-navigation";
 import { ParticleField } from "@/components/client/particle-field";
 import { ContactBar } from "@/components/site/contact-bar";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ru">
       <body>
+        <AnchorNavigation />
         <ParticleField />
         <div className="site-chrome">
           <a className="skip-link" href="#main">
