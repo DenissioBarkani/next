@@ -1,11 +1,10 @@
-import { Braces, Code2, Globe, Layers, type LucideIcon } from "lucide-react";
+import { Code2 } from "lucide-react";
 import Link from "next/link";
+import { EarlyProjects } from "@/components/client/early-projects";
 import type { Project } from "@/content/projects";
 import type { homePage } from "@/content/pages";
 import { projectTimelineLabel } from "@/lib/projects";
 import { withoutFinalPeriod } from "@/lib/utils";
-
-const icons = { layers: Layers, braces: Braces, globe: Globe } satisfies Record<string, LucideIcon>;
 
 type ExperienceOverviewProps = {
   readonly data: typeof homePage.experience;
@@ -34,29 +33,6 @@ export function ExperienceOverview({ data, projects }: ExperienceOverviewProps) 
           </p>
         </div>
         <div className="experience-grid">
-          <aside className="experience-aside">
-            <span className="large-number">
-              {data.componentCount.slice(0, -1)}
-              <span className="blue">+</span>
-            </span>
-            <p>
-              {data.componentCountDescription.split("\n").map((line) => (
-                <span key={line}>
-                  {line}
-                  <br />
-                </span>
-              ))}
-            </p>
-            {data.capabilities.map((capability) => {
-              const Icon = icons[capability.icon];
-              return (
-                <div className="capability" key={capability.label}>
-                  <Icon size={20} />
-                  <span>{capability.label}</span>
-                </div>
-              );
-            })}
-          </aside>
           <div className="timeline">
             {timeline.map((project) => (
               <Link key={project.slug} href={`/projects/${project.slug}`} className="timeline-row">
@@ -69,6 +45,7 @@ export function ExperienceOverview({ data, projects }: ExperienceOverviewProps) 
                 <Code2 className="timeline-icon" size={23} />
               </Link>
             ))}
+            <EarlyProjects data={data.earlyProjects} />
           </div>
         </div>
       </div>

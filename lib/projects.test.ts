@@ -3,7 +3,8 @@ import { projects } from "@/content/projects";
 import { site } from "@/content/site";
 import {
   findProject,
-  getNextProject,
+  featuredProjects,
+  orderedProjects,
   projectSitemapEntries,
   projectStaticParams,
 } from "@/lib/projects";
@@ -15,11 +16,28 @@ describe("project catalog", () => {
 
   it("finds projects by slug and returns undefined for unknown values", () => {
     expect(findProject("student-profile")?.title).toBe("Цифровой профиль студента");
+    expect(findProject("smart-home")?.title).toBe("Панель управления умным домом");
     expect(findProject("missing-project")).toBeUndefined();
   });
 
-  it("wraps the next project after the last entry", () => {
-    expect(getNextProject(projects.at(-1)!.slug).slug).toBe(projects[0].slug);
+  it("keeps the four featured projects in homepage order", () => {
+    expect(featuredProjects.map((project) => project.slug)).toEqual([
+      "tournament-platform",
+      "student-profile",
+      "center-invest",
+      "ai-artdir",
+    ]);
+  });
+
+  it("keeps every project in the all-projects order", () => {
+    expect(orderedProjects.map((project) => project.slug)).toEqual([
+      "tournament-platform",
+      "student-profile",
+      "center-invest",
+      "ai-artdir",
+      "smart-home",
+      "vue-sneakers",
+    ]);
   });
 
   it("creates one absolute sitemap entry per project", () => {

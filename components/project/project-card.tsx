@@ -1,11 +1,17 @@
 import Link from "next/link";
 import type { Project } from "@/content/projects";
+import { projectHref, type ProjectNavigationContext } from "@/lib/projects-navigation";
 import { ProjectCover } from "@/components/project/project-cover";
 import { withoutFinalPeriod } from "@/lib/utils";
 
-export function ProjectCard({ project }: { readonly project: Project }) {
+type ProjectCardProps = {
+  readonly project: Project;
+  readonly context?: ProjectNavigationContext;
+};
+
+export function ProjectCard({ project, context = "catalog" }: ProjectCardProps) {
   return (
-    <Link href={`/projects/${project.slug}`} className="project-card">
+    <Link href={projectHref(project.slug, context)} className="project-card">
       <ProjectCover project={project} />
       <div className="project-card-info">
         <div className="card-title-row">
@@ -14,7 +20,7 @@ export function ProjectCard({ project }: { readonly project: Project }) {
         </div>
         <p>{withoutFinalPeriod(project.summary)}</p>
         <div className="tags">
-          {project.stack.slice(0, 4).map((item) => (
+          {(project.cardStack ?? project.stack).slice(0, 4).map((item) => (
             <span key={item}>{item}</span>
           ))}
         </div>

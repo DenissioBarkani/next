@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import type { MorePageData } from "@/content/pages";
 import { AccentPeriod } from "@/components/site/accent-period";
+import { ArrowLink } from "@/components/site/arrow-link";
 import { withoutFinalPeriod } from "@/lib/utils";
 
 export function MorePageContent({ data }: { readonly data: MorePageData }) {
@@ -33,9 +33,9 @@ export function MorePageContent({ data }: { readonly data: MorePageData }) {
               <h3>{item.title}</h3>
               <p>{withoutFinalPeriod(item.text)}</p>
               {item.href && (
-                <Link href={item.href} className="text-link">
-                  {item.linkLabel} <ArrowRight aria-hidden="true" size={18} />
-                </Link>
+                <ArrowLink href={item.href} className="text-link">
+                  {item.linkLabel}
+                </ArrowLink>
               )}
             </div>
           ))}
@@ -48,9 +48,9 @@ export function MorePageContent({ data }: { readonly data: MorePageData }) {
           )}
         </section>
       ))}
-      <Link href={data.backLink.href} className="text-link">
-        {data.backLink.label} <ArrowRight aria-hidden="true" size={18} />
-      </Link>
+      <ArrowLink href={data.backLink.href} className="text-link">
+        {data.backLink.label}
+      </ArrowLink>
     </main>
   );
 }

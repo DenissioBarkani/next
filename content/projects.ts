@@ -44,8 +44,22 @@ export type ProjectCaseStudy = {
   readonly results: readonly { readonly title: string; readonly text: string }[];
 };
 
+export type ProjectCaseSection = {
+  readonly id: string;
+  readonly title: string;
+  readonly presentation?: "contributions" | "decisions" | "results";
+  readonly items: readonly {
+    readonly title?: string;
+    readonly text: string;
+    readonly highlight?: boolean;
+    readonly media?: readonly ProjectMedia[];
+  }[];
+};
+
 export type Project = {
   readonly slug: string;
+  readonly featured: boolean;
+  readonly featuredOrder: number;
   readonly title: string;
   readonly shortTitle: string;
   readonly kind: {
@@ -58,6 +72,7 @@ export type Project = {
   readonly heroNote?: string;
   readonly role: string;
   readonly cardHeadline?: string;
+  readonly cardStack?: readonly string[];
   readonly stack: readonly string[];
   readonly tasks: readonly ProjectTask[];
   readonly decisions: readonly { title: string; text: string }[];
@@ -66,6 +81,7 @@ export type Project = {
   readonly demoNote?: string;
   readonly mediaIntro?: string;
   readonly caseStudy?: ProjectCaseStudy;
+  readonly caseSections?: readonly ProjectCaseSection[];
   readonly repo?: string;
   readonly demo?: string;
   readonly repoNote?: string;
@@ -74,7 +90,7 @@ export type Project = {
     readonly repo?: string;
   };
   readonly cover: {
-    readonly tone: "tournament" | "student" | "bank" | "artdir" | "sneakers";
+    readonly tone: "tournament" | "student" | "bank" | "artdir" | "sneakers" | "smart-home";
     readonly label: string;
     readonly headline: string;
     readonly technology: string;
@@ -94,7 +110,7 @@ export type Project = {
     readonly intro: string;
     readonly eyebrow?: string;
   };
-  readonly timeline?: { readonly suffix?: string; readonly text: string };
+  readonly timeline?: { readonly label?: string; readonly suffix?: string; readonly text: string };
 };
 
 const sourceExamples = {
@@ -236,10 +252,12 @@ const sourceExamples = {
 const projectSource = [
   {
     slug: "tournament-platform",
+    featured: true,
+    featuredOrder: 1,
     title: "B2B-платформа турниров",
     shortTitle: "Турниры",
     kind: { label: "Коммерческий проект" },
-    year: "2025 — 2026",
+    year: "2025–2026",
     summary:
       "Платформа для организации турниров: от регистрации участников до судейства и публикации результатов.",
     description:
@@ -349,12 +367,14 @@ const projectSource = [
     media: [],
     examples: [],
     timeline: {
-      suffix: "ВКР",
-      text: "Панель судейства, публичные страницы, UI-компоненты и интеграция с backend. Работа в команде заказчика.",
+      label: "Оплачиваемая работа в команде заказчика",
+      text: "Основные экраны, новые функции, 20+ общих UI-компонентов и интеграция с REST API.",
     },
   },
   {
     slug: "student-profile",
+    featured: true,
+    featuredOrder: 2,
     title: "Цифровой профиль студента",
     shortTitle: "Цифровой профиль",
     kind: { label: "Внутренний проект ДГТУ" },
@@ -473,11 +493,14 @@ const projectSource = [
         "Публичные фрагменты из student-dep: конфигурация фильтров, подписи диаграммы навыков и активное состояние мобильной навигации.",
     },
     timeline: {
+      label: "Внутренний прототип ДГТУ",
       text: "Самостоятельный UI/UX и клиентская часть на Next.js. Совместная работа с backend-разработчиком.",
     },
   },
   {
     slug: "center-invest",
+    featured: true,
+    featuredOrder: 3,
     title: "Боты под управлением",
     shortTitle: "Центр-инвест",
     kind: { label: "Практика", detail: "Центр-инвест" },
@@ -608,11 +631,120 @@ const projectSource = [
     ],
     examples: [],
     timeline: {
-      text: "SPA для управления Telegram-ботами: формы, таблицы, API и состояния интерфейса.",
+      label: "Практика · Центр-инвест",
+      text: "Формы, таблицы, API и состояния интерфейса внутреннего прототипа.",
     },
   },
   {
+    slug: "smart-home",
+    featured: false,
+    featuredOrder: 5,
+    title: "Панель управления умным домом",
+    shortTitle: "Умный дом",
+    kind: { label: "Учебный командный проект" },
+    year: "2024",
+    summary:
+      "Веб-интерфейс стенда на ESP32: управление устройствами и просмотр показаний датчиков.",
+    description:
+      "Веб-интерфейс демонстрационного стенда на ESP32: управление устройствами и просмотр показаний датчиков через браузер. В проекте ДГТУ разрабатывал интерфейс, подбирал электронику и работал с аппаратной частью. Также реализовал отдельный модуль обнаружения людей на видео.",
+    heroNote: "Команда собрала стенд с управлением через браузер и мониторингом датчиков.",
+    role: "Frontend-разработчик и тимлид учебной команды · подбор электроники и работа с аппаратной частью · компьютерное зрение",
+    cardHeadline: "SMART HOME",
+    cardStack: ["HTML", "ESP32"],
+    stack: ["HTML", "ESP32", "Python", "YOLOv8", "OpenCV"],
+    tasks: [],
+    decisions: [],
+    result: "",
+    caseSections: [
+      {
+        id: "task",
+        title: "Задача и моя роль",
+        items: [
+          {
+            text: "В рамках учебного проекта «Цифровая инфраструктура» команда собирала стенд, демонстрирующий управление освещением и вентиляцией, мониторинг температуры и влажности, а также события датчиков газа, воды и движения. Для управления устройствами и просмотра данных нужен был веб-интерфейс, доступный в браузере через ESP32.",
+          },
+          {
+            text: "Разрабатывал веб-интерфейс, подбирал электронные компоненты и работал с аппаратной частью. Моя работа связывала пользовательские действия в браузере с физическими устройствами стенда. Отдельно занимался обнаружением людей в потоке веб-камеры и на видеофайле с помощью YOLOv8 и OpenCV.",
+            highlight: true,
+          },
+        ],
+      },
+      {
+        id: "interface",
+        title: "Возможности веб-интерфейса",
+        items: [
+          {
+            title: "Управление устройствами",
+            text: "Через панель можно было вручную управлять подключёнными устройствами, включая освещение и вентиляцию.",
+          },
+          {
+            title: "Просмотр показаний",
+            text: "Интерфейс отображал температуру и влажность, чтобы данные датчиков были доступны прямо в браузере.",
+          },
+          {
+            title: "События датчиков",
+            text: "Панель показывала события датчиков движения, газа и воды и помогала наблюдать за работой стенда.",
+          },
+        ],
+      },
+      {
+        id: "esp32",
+        title: "Связь браузера, ESP32 и устройств",
+        items: [
+          {
+            text: "Пользователь открывал IP-адрес контроллера в браузере. Веб-сервер на ESP32 отдавал HTML-страницы по HTTP, а сам контроллер взаимодействовал с датчиками и исполнительными устройствами. Веб-интерфейс дополнял автоматические сценарии на контроллере ручным управлением и просмотром данных.",
+          },
+        ],
+      },
+      {
+        id: "hardware",
+        title: "Подбор электроники",
+        items: [
+          {
+            text: "Подбирал компоненты под сценарии стенда и работал с их подключением к ESP32: датчики, реле, сервопривод, вентилятор, светодиодную ленту и звуковое оповещение. Выбор оборудования связывал с демонстрируемыми функциями: подсветкой по движению, предупреждением о газе и обнаружением протечки.",
+          },
+        ],
+      },
+      {
+        id: "vision",
+        title: "Обнаружение людей на видео",
+        items: [
+          {
+            text: "Реализовал отдельный модуль на Python с YOLOv8 и OpenCV. Он обрабатывал поток веб-камеры и видеофайл, обнаруживал людей в кадре и отображал результат с рамками вокруг найденных объектов.",
+          },
+        ],
+      },
+      {
+        id: "result",
+        title: "Результат и материалы",
+        presentation: "results",
+        items: [
+          {
+            title: "Для проекта",
+            text: "Команда собрала демонстрационный стенд умного дома с освещением, вентиляцией, датчиками и сервоприводом. Через веб-интерфейс можно управлять устройствами и просматривать данные датчиков; отдельно работает модуль обнаружения людей на видео.",
+          },
+          {
+            title: "Личные итоги",
+            text: "Получил опыт разработки веб-интерфейса для физической системы, подбора электроники и работы с аппаратной частью. Скриншоты стенда и результаты распознавания будут добавлены на страницу, когда появятся материалы.",
+          },
+        ],
+      },
+    ],
+    cover: {
+      tone: "smart-home",
+      label: "SMART HOME",
+      headline: "SMART HOME",
+      technology: "HTML / ESP32",
+      icon: "code",
+      symbol: "{ }",
+    },
+    media: [],
+    examples: [],
+  },
+  {
     slug: "ai-artdir",
+    featured: true,
+    featuredOrder: 4,
     title: "AI-Artdir",
     shortTitle: "AI-Artdir",
     kind: { label: "Личный проект", detail: "юмористическая вёрстка" },
@@ -708,6 +840,8 @@ const projectSource = [
   },
   {
     slug: "vue-sneakers",
+    featured: false,
+    featuredOrder: 6,
     title: "Vue Sneakers",
     shortTitle: "Vue Sneakers",
     kind: { label: "Учебный проект", detail: "по гайду" },

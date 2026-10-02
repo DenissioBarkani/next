@@ -1,16 +1,23 @@
+import { Suspense } from "react";
+import { ArrowLeft, GitFork, Globe } from "lucide-react";
 import Link from "next/link";
-import { ArrowRight, GitFork, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CodeViewer } from "@/components/client/code-viewer";
 import { MediaGallery } from "@/components/client/media-gallery";
+import {
+  ProjectBreadcrumb,
+  ProjectRelatedNavigation,
+} from "@/components/client/project-navigation";
 import { ProjectToc, type ProjectTocItem } from "@/components/client/project-toc";
-import { ProjectCaseStudy } from "@/components/project/project-case-study";
+import { ProjectCaseSections, ProjectCaseStudy } from "@/components/project/project-case-study";
 import { ProjectCover } from "@/components/project/project-cover";
+import { ArrowLink } from "@/components/site/arrow-link";
 import type { Project, ProjectTask } from "@/content/projects";
 import { projectKindLabel } from "@/lib/projects";
+import { projectHref, resolveProjectNavigation } from "@/lib/projects-navigation";
 import { withoutFinalPeriod } from "@/lib/utils";
 
-type ProjectDetailsProps = { readonly project: Project; readonly nextProject: Project };
+type ProjectDetailsProps = { readonly project: Project };
 
 function ProjectTaskItem({ index, task }: { readonly index: number; readonly task: ProjectTask }) {
   return (
@@ -30,39 +37,65 @@ function ProjectTaskItem({ index, task }: { readonly index: number; readonly tas
   );
 }
 
-export function ProjectDetails({ project, nextProject }: ProjectDetailsProps) {
+function ProjectBreadcrumbFallback({ project }: { readonly project: Project }) {
+  return (
+    <div className="breadcrumb">
+      <Link href="/">Главная</Link>
+      <span>/</span>
+      <Link href="/projects">Работы</Link>
+      <span>/</span>
+      <span aria-current="page">{project.shortTitle}</span>
+    </div>
+  );
+}
+
+function ProjectRelatedNavigationFallback({ project }: { readonly project: Project }) {
+  const navigation = resolveProjectNavigation(project.slug, null);
+  return (
+    <div className="related-projects">
+      <Link href={navigation.returnHref} className="arrow-link arrow-link--back">
+        <ArrowLeft size={17} aria-hidden="true" />
+        {navigation.returnLabel}
+      </Link>
+      <div className="related-projects-actions">
+        <ArrowLink href={projectHref(navigation.nextSlug)}>Следующий проект</ArrowLink>
+      </div>
+    </div>
+  );
+}
+
+export function ProjectDetails({ project }: ProjectDetailsProps) {
   const codeSection = project.codeSection;
   const caseStudy = project.caseStudy;
+  const caseSections = project.caseSections;
   const unavailableNotes = [
     !project.demo ? project.unavailable?.demo : undefined,
     !project.repo ? project.unavailable?.repo : undefined,
   ].filter((note): note is string => Boolean(note));
-  const tocItems: readonly ProjectTocItem[] = caseStudy
-    ? [
-        { id: "task", label: "Задача и роль" },
-        { id: "contribution", label: "Мой вклад" },
-        { id: "frontend", label: "Ключевые моменты" },
-        { id: "result", label: "Результат" },
-      ]
-    : [
-        ...(project.context ? [{ id: "about", label: "О проекте" }] : []),
-        { id: "contribution", label: "Мой вклад" },
-        ...(project.decisions.length > 0 ? [{ id: "decisions", label: "Ключевые моменты" }] : []),
-        ...(project.demoNote ? [{ id: "demo", label: "Демонстрация" }] : []),
-        ...(project.media.length > 0 ? [{ id: "media", label: "Интерфейсы" }] : []),
-        { id: "result", label: "Результат" },
-        ...(project.examples.length > 0 ? [{ id: "code", label: "Исходный код" }] : []),
-      ];
+  const tocItems: readonly ProjectTocItem[] = caseSections
+    ? caseSections.map((section) => ({ id: section.id, label: section.title }))
+    : caseStudy
+      ? [
+          { id: "task", label: "Задача и роль" },
+          { id: "contribution", label: "Мой вклад" },
+          { id: "frontend", label: "Ключевые моменты" },
+          { id: "result", label: "Результат" },
+        ]
+      : [
+          ...(project.context ? [{ id: "about", label: "О проекте" }] : []),
+          { id: "contribution", label: "Мой вклад" },
+          ...(project.decisions.length > 0 ? [{ id: "decisions", label: "Ключевые моменты" }] : []),
+          ...(project.demoNote ? [{ id: "demo", label: "Демонстрация" }] : []),
+          ...(project.media.length > 0 ? [{ id: "media", label: "Интерфейсы" }] : []),
+          { id: "result", label: "Результат" },
+          ...(project.examples.length > 0 ? [{ id: "code", label: "Исходный код" }] : []),
+        ];
 
   return (
     <main id="main" className="shell case-main">
-      <div className="breadcrumb">
-        <Link href="/">Главная</Link>
-        <span>/</span>
-        <Link href="/#projects">Работы</Link>
-        <span>/</span>
-        <span>{project.shortTitle}</span>
-      </div>
+      <Suspense fallback={<ProjectBreadcrumbFallback project={project} />}>
+        <ProjectBreadcrumb project={project} />
+      </Suspense>
       <section className="case-intro">
         <div>
           <p className="eyebrow">{projectKindLabel(project)}</p>
@@ -137,7 +170,9 @@ export function ProjectDetails({ project, nextProject }: ProjectDetailsProps) {
       <div className="case-body">
         <ProjectToc items={tocItems} />
         <div className="case-content">
-          {caseStudy ? (
+          {caseSections ? (
+            <ProjectCaseSections sections={caseSections} />
+          ) : caseStudy ? (
             <ProjectCaseStudy study={caseStudy} />
           ) : (
             <>
@@ -227,13 +262,9 @@ export function ProjectDetails({ project, nextProject }: ProjectDetailsProps) {
           )}
         </div>
       </div>
-      <div className="related-projects">
-        <Link href="/#projects">Все работы</Link>
-        <Link href={`/projects/${nextProject.slug}`} className="next-project-link">
-          Следующий проект: {nextProject.shortTitle}
-          <ArrowRight size={18} aria-hidden="true" />
-        </Link>
-      </div>
+      <Suspense fallback={<ProjectRelatedNavigationFallback project={project} />}>
+        <ProjectRelatedNavigation project={project} />
+      </Suspense>
     </main>
   );
 }

@@ -292,6 +292,39 @@ h2 {
   min-width: 0;
   display: block;
 }
+.arrow-link {
+  color: var(--blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+.arrow-link svg {
+  transition: transform 0.2s;
+}
+.arrow-link:hover {
+  color: #174ea6;
+}
+.arrow-link:hover svg {
+  transform: translateX(3px);
+}
+.arrow-link--back:hover svg {
+  transform: translateX(-3px);
+}
+.projects-all-link {
+  margin-top: 32px;
+}
+.projects-page .breadcrumb {
+  margin-bottom: -14px;
+  padding-top: 42px;
+}
+@media (max-width: 700px) {
+  .projects-page .breadcrumb {
+    margin-bottom: -2px;
+    padding-top: 30px;
+  }
+}
 .project-cover {
   height: 310px;
   border-radius: 12px;
@@ -371,6 +404,10 @@ h2 {
   background: #edf3ff;
   color: #3863a9;
 }
+.cover-smart-home {
+  background: #fff;
+  color: #2859ad;
+}
 .cover-image {
   position: absolute;
   inset: 0;
@@ -432,31 +469,7 @@ h2 {
   border-block: 1px solid var(--line);
 }
 .experience-grid {
-  display: grid;
-  grid-template-columns: 1fr 2.3fr;
-  gap: 80px;
-}
-.large-number {
-  font-size: 85px;
-  letter-spacing: -0.065em;
-  line-height: 1.1;
-  font-weight: 500;
-}
-.experience-aside > p {
-  font-size: 14px;
-  color: var(--quiet);
-  margin: 12px 0 32px;
-}
-.capability {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 17px 0;
-  font-size: 13px;
-  color: #4d586b;
-}
-.capability svg {
-  color: var(--blue);
+  max-width: 900px;
 }
 .timeline-row {
   padding: 26px 0;
@@ -497,6 +510,72 @@ h2 {
 .timeline-row:hover h3 {
   color: var(--blue);
 }
+.early-projects {
+  border-bottom: 1px solid #dbe0eb;
+}
+.early-projects-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  justify-content: space-between;
+  padding: 23px 0;
+  text-align: left;
+  width: 100%;
+}
+.early-projects-title,
+.early-projects-summary {
+  display: block;
+}
+.early-projects-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+.early-projects-summary {
+  color: var(--quiet);
+  font-size: 13px;
+  margin-top: 5px;
+}
+.early-projects-chevron {
+  color: var(--blue);
+  flex: none;
+  height: 20px;
+  transition: transform 0.2s;
+  width: 20px;
+}
+.early-projects-chevron.is-open {
+  transform: rotate(180deg);
+}
+.early-projects-content {
+  border-top: 1px solid var(--line);
+}
+.early-project {
+  padding: 21px 0;
+}
+.early-project + .early-project {
+  border-top: 1px solid var(--line);
+}
+.early-project h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 5px 0 7px;
+}
+.early-project p {
+  color: var(--quiet);
+  font-size: 14px;
+  margin: 0;
+  max-width: 660px;
+}
+.early-project-link {
+  font-size: 13px;
+  margin-top: 12px;
+}
+.early-projects-toggle:hover .early-projects-title {
+  color: var(--blue);
+}
 .education-section {
   display: grid;
   grid-template-columns: 1fr 1.35fr;
@@ -511,7 +590,7 @@ h2 {
 .text-link {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   font-size: 13px;
   color: var(--blue);
 }
@@ -823,6 +902,11 @@ h2 {
   justify-content: space-between;
   gap: 25px;
 }
+.related-projects-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
 .related-projects a {
   color: var(--blue);
   font-size: 16px;
@@ -999,8 +1083,7 @@ h2 {
     font-size: 34px;
   }
   .experience-grid {
-    gap: 35px;
-    grid-template-columns: 0.9fr 2fr;
+    max-width: none;
   }
   .timeline-row {
     grid-template-columns: 88px 1fr;
@@ -1148,25 +1231,7 @@ h2 {
     font-size: 11px;
   }
   .experience-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  .experience-aside {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    gap: 10px 18px;
-    align-items: center;
-  }
-  .large-number {
-    font-size: 66px;
-  }
-  .experience-aside > p {
-    margin: 0;
-    font-size: 13px;
-  }
-  .capability {
-    grid-column: 1/-1;
-    margin: 5px 0;
+    max-width: none;
   }
   .timeline-row {
     grid-template-columns: 1fr;
@@ -1333,6 +1398,11 @@ h2 {
     padding: 20px;
   }
   .related-projects {
+    align-items: start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .related-projects-actions {
     align-items: start;
     flex-direction: column;
     gap: 12px;
@@ -1568,9 +1638,7 @@ body {
   font-size: 12px !important;
 }
 .next-project-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 16px;
 }
 .case-action-note {
   font-size: 12px;
@@ -1716,6 +1784,22 @@ body {
   margin: 26px 0 0 !important;
   padding: 3px 0 3px 16px;
 }
+.case-section-items {
+  display: grid;
+  gap: 22px;
+}
+.case-section-item h3 {
+  font-size: 19px;
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+.case-section-item p {
+  margin: 0;
+  max-width: 780px;
+}
+.case-section-item .media-grid {
+  margin-top: 20px;
+}
 .section-stars {
   display: inline-flex;
   gap: 5px;
@@ -1811,9 +1895,10 @@ body {
   white-space: nowrap;
 }
 
-/* На внутренних страницах подложка делает частицы спокойнее, сохраняя эффект фона. */
-.site-chrome:has(.case-main) {
-  background: rgba(255, 255, 255, 0.88);
+/* Внутренние страницы используют сплошной фон, чтобы подсветка частиц не создавала видимый стык. */
+.site-chrome:has(.case-main),
+.site-chrome:has(.projects-page) {
+  background: #fff;
 }
 
 /* Декоративный кодовый знак не должен попадать в выделение текста. */

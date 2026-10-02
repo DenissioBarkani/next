@@ -21,8 +21,8 @@ export function AdditionalDirections({ data }: { readonly data: typeof homePage.
               <Icon size={27} />
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-              <span className="text-link">
-                Посмотреть подробнее <ArrowRight aria-hidden="true" size={18} />
+              <span className="arrow-link">
+                Посмотреть подробнее <ArrowRight aria-hidden="true" size={17} />
               </span>
             </Link>
           );

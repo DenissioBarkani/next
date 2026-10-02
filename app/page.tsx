@@ -6,6 +6,7 @@ import { Hero } from "@/components/sections/hero";
 import { ProjectShowcase } from "@/components/sections/project-showcase";
 import { homePage } from "@/content/pages";
 import { projects } from "@/content/projects";
+import { featuredProjects } from "@/lib/projects";
 import { site } from "@/content/site";
 
 export default function Home() {
@@ -24,7 +25,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <ProjectShowcase projects={projects} />
+      <ProjectShowcase projects={featuredProjects} context="home" allProjectsHref="/projects" />
       <ExperienceOverview data={homePage.experience} projects={projects} />
       <EducationOverview data={homePage.education} />
       <AdditionalDirections data={homePage.directions} />

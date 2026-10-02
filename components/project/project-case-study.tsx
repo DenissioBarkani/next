@@ -1,5 +1,5 @@
 import { MediaGallery } from "@/components/client/media-gallery";
-import type { ProjectCaseStudy } from "@/content/projects";
+import type { ProjectCaseSection, ProjectCaseStudy } from "@/content/projects";
 import { withoutFinalPeriod } from "@/lib/utils";
 
 export function ProjectCaseStudy({ study }: { readonly study: ProjectCaseStudy }) {
@@ -61,4 +61,63 @@ export function ProjectCaseStudy({ study }: { readonly study: ProjectCaseStudy }
       </section>
     </>
   );
+}
+
+export function ProjectCaseSections({
+  sections,
+}: {
+  readonly sections: readonly ProjectCaseSection[];
+}) {
+  return sections.map((section, sectionIndex) => (
+    <section
+      id={section.id}
+      className={`case-section ${sectionIndex === 0 ? "case-context" : ""}`}
+      key={section.id}
+    >
+      <h2>{section.title}</h2>
+      {section.presentation === "contributions" ? (
+        <div className="contribution-list">
+          {section.items.map((item) => (
+            <article className="contribution-item" key={`${item.title ?? "text"}-${item.text}`}>
+              <div>
+                {item.title && <h3>{item.title}</h3>}
+                <p>{withoutFinalPeriod(item.text)}</p>
+              </div>
+              {item.media && <MediaGallery items={item.media} />}
+            </article>
+          ))}
+        </div>
+      ) : section.presentation === "decisions" ? (
+        <div className="decision-grid">
+          {section.items.map((item) => (
+            <div className="decision" key={`${item.title ?? "text"}-${item.text}`}>
+              {item.title && <h3>{item.title}</h3>}
+              <p>{withoutFinalPeriod(item.text)}</p>
+            </div>
+          ))}
+        </div>
+      ) : section.presentation === "results" ? (
+        <div className="case-results">
+          {section.items.map((item) => (
+            <div className="result-box" key={`${item.title ?? "text"}-${item.text}`}>
+              {item.title && <h3>{item.title}</h3>}
+              <p>{withoutFinalPeriod(item.text)}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="case-section-items">
+          {section.items.map((item) => (
+            <article className="case-section-item" key={`${item.title ?? "text"}-${item.text}`}>
+              {item.title && <h3>{item.title}</h3>}
+              <p className={item.highlight ? "case-role-highlight" : undefined}>
+                {withoutFinalPeriod(item.text)}
+              </p>
+              {item.media && <MediaGallery items={item.media} />}
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  ));
 }
