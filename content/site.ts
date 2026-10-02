@@ -16,7 +16,7 @@ export const site = {
     telegramHandle: "@DenissioBarkaniBH",
     github: "https://github.com/DenissioBarkani",
     githubHandle: "DenissioBarkani",
-    resumeHref: "/resume/denis-barkalov.doc",
+    resumeHref: "/resume/denis-barkalov.pdf",
   },
   navigation: [
     { href: "/#projects", label: "Работы" },
