@@ -5,12 +5,16 @@ export function findProject(slug: string) {
 }
 
 export function projectKindLabel(project: Pick<Project, "kind">) {
-  return project.kind.detail ? `${project.kind.label} · ${project.kind.detail}` : project.kind.label;
+  return project.kind.detail
+    ? `${project.kind.label} · ${project.kind.detail}`
+    : project.kind.label;
 }
 
 export function projectTimelineLabel(project: Pick<Project, "kind" | "timeline">) {
   if (!project.timeline) return projectKindLabel(project);
-  return project.timeline.suffix ? `${projectKindLabel(project)} · ${project.timeline.suffix}` : project.kind.label;
+  return project.timeline.suffix
+    ? `${projectKindLabel(project)} · ${project.timeline.suffix}`
+    : project.kind.label;
 }
 
 export function getNextProject(slug: string) {

@@ -6,6 +6,8 @@
 
 ```bash
 npm run dev
+npm run format       # привести весь код к единому виду
+npm run format:check # проверить форматирование без изменений
 npm run lint
 npm run test
 npx tsc --noEmit --incremental false
@@ -39,6 +41,7 @@ npm run build
 Каталог автоматически создаёт карточку, страницу `/projects/<slug>`, static params, sitemap и следующий проект. Добавьте поле `timeline`, если проект должен появиться в блоке опыта на главной.
 
 Для изображений укажите `src`, `alt`, `caption`, `width` и `height`; это сохраняет корректное соотношение сторон и предотвращает layout shift.
+
 # Phone protection on Vercel
 
 The phone reveal uses Yandex SmartCaptcha and the `POST /api/contacts` Route Handler. Set the variables listed in [`.env.example`](.env.example) in Vercel. Add the production domain and `localhost` (for local testing) to the allowed domains of the SmartCaptcha site key.

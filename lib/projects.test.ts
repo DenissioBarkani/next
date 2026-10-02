@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "@/content/projects";
 import { site } from "@/content/site";
-import { findProject, getNextProject, projectSitemapEntries, projectStaticParams } from "@/lib/projects";
+import {
+  findProject,
+  getNextProject,
+  projectSitemapEntries,
+  projectStaticParams,
+} from "@/lib/projects";
 
 describe("project catalog", () => {
   it("builds static params for every project", () => {
@@ -18,6 +23,8 @@ describe("project catalog", () => {
   });
 
   it("creates one absolute sitemap entry per project", () => {
-    expect(projectSitemapEntries(site.url)).toEqual(projects.map((project) => ({ url: `${site.url}/projects/${project.slug}` })));
+    expect(projectSitemapEntries(site.url)).toEqual(
+      projects.map((project) => ({ url: `${site.url}/projects/${project.slug}` })),
+    );
   });
 });

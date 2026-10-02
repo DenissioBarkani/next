@@ -19,11 +19,16 @@ const pointerRadius = 220;
 const rippleLifetime = 90;
 
 const rgb = ([red, green, blue]: Rgb) => `rgb(${red}, ${green}, ${blue})`;
-const rgba = ([red, green, blue]: Rgb, alpha: number) => `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+const rgba = ([red, green, blue]: Rgb, alpha: number) =>
+  `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 
 function blend(from: Rgb, to: Rgb, amount: number): Rgb {
   const t = Math.max(0, Math.min(1, amount));
-  return [Math.round(from[0] + (to[0] - from[0]) * t), Math.round(from[1] + (to[1] - from[1]) * t), Math.round(from[2] + (to[2] - from[2]) * t)];
+  return [
+    Math.round(from[0] + (to[0] - from[0]) * t),
+    Math.round(from[1] + (to[1] - from[1]) * t),
+    Math.round(from[2] + (to[2] - from[2]) * t),
+  ];
 }
 
 function countFor(width: number, height: number) {
@@ -38,7 +43,14 @@ function makeParticle(width: number, height: number): Particle {
   const angle = Math.random() * Math.PI * 2;
   const z = 0.25 + Math.random() * 0.75;
   const speed = baseSpeed * (0.4 + z);
-  return { x: Math.random() * width, y: Math.random() * height, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, z, phase: Math.random() * Math.PI * 2 };
+  return {
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+    z,
+    phase: Math.random() * Math.PI * 2,
+  };
 }
 
 export function ParticleField() {
@@ -83,7 +95,8 @@ export function ParticleField() {
           const distanceSquared = dx * dx + dy * dy;
           if (distanceSquared > maxDistance * maxDistance) continue;
           const closeness = 1 - Math.sqrt(distanceSquared) / maxDistance;
-          context.globalAlpha = closeness * 0.7 * Math.min(particles[a].z, particles[b].z) * scrollFade;
+          context.globalAlpha =
+            closeness * 0.7 * Math.min(particles[a].z, particles[b].z) * scrollFade;
           context.beginPath();
           context.moveTo(positionsX[a], positionsY[a]);
           context.lineTo(positionsX[b], positionsY[b]);
@@ -95,7 +108,14 @@ export function ParticleField() {
       const strength = pointer?.strength ?? 0;
       const activePointer = pointer;
       if (activePointer && strength > 0.01) {
-        const glow = context.createRadialGradient(activePointer.x, activePointer.y, 0, activePointer.x, activePointer.y, 308);
+        const glow = context.createRadialGradient(
+          activePointer.x,
+          activePointer.y,
+          0,
+          activePointer.x,
+          activePointer.y,
+          308,
+        );
         glow.addColorStop(0, rgba(colors.link, 0.16 * strength * scrollFade));
         glow.addColorStop(1, rgba(colors.link, 0));
         context.globalAlpha = 1;
@@ -103,7 +123,10 @@ export function ParticleField() {
         context.fillRect(activePointer.x - 308, activePointer.y - 308, 616, 616);
         context.strokeStyle = rgb(colors.signal);
         particles.forEach((_, index) => {
-          const distance = Math.hypot(positionsX[index] - activePointer.x, positionsY[index] - activePointer.y);
+          const distance = Math.hypot(
+            positionsX[index] - activePointer.x,
+            positionsY[index] - activePointer.y,
+          );
           if (distance > pointerRadius) return;
           context.globalAlpha = (1 - distance / pointerRadius) * 0.8 * strength * scrollFade;
           context.beginPath();
@@ -114,7 +137,15 @@ export function ParticleField() {
       }
 
       particles.forEach((particle, index) => {
-        const influence = pointer && strength > 0.01 ? Math.max(0, 1 - Math.hypot(positionsX[index] - pointer.x, positionsY[index] - pointer.y) / pointerRadius) * strength : 0;
+        const influence =
+          pointer && strength > 0.01
+            ? Math.max(
+                0,
+                1 -
+                  Math.hypot(positionsX[index] - pointer.x, positionsY[index] - pointer.y) /
+                    pointerRadius,
+              ) * strength
+            : 0;
         const radius = 0.8 + particle.z * 1.7 + influence * 1.8;
         const halo = Math.max(influence, (particle.z - 0.8) * 1.5);
         if (halo > 0.05) {
@@ -133,14 +164,24 @@ export function ParticleField() {
 
       if (animationId && activeEdges.length && signals.length < 14 && Math.random() < 0.06) {
         const edge = Math.floor(Math.random() * (activeEdges.length / 2)) * 2;
-        const [a, b] = Math.random() < 0.5 ? [activeEdges[edge], activeEdges[edge + 1]] : [activeEdges[edge + 1], activeEdges[edge]];
+        const [a, b] =
+          Math.random() < 0.5
+            ? [activeEdges[edge], activeEdges[edge + 1]]
+            : [activeEdges[edge + 1], activeEdges[edge]];
         signals.push({ a, b, t: 0 });
       }
 
       context.fillStyle = rgb(colors.signal);
       for (let index = signals.length - 1; index >= 0; index -= 1) {
         const signal = signals[index];
-        if (signal.a >= particles.length || signal.b >= particles.length || Math.hypot(positionsX[signal.a] - positionsX[signal.b], positionsY[signal.a] - positionsY[signal.b]) > maxDistance) {
+        if (
+          signal.a >= particles.length ||
+          signal.b >= particles.length ||
+          Math.hypot(
+            positionsX[signal.a] - positionsX[signal.b],
+            positionsY[signal.a] - positionsY[signal.b],
+          ) > maxDistance
+        ) {
           signals.splice(index, 1);
           continue;
         }
@@ -200,7 +241,9 @@ export function ParticleField() {
         ripples[index].age += delta;
         if (ripples[index].age > rippleLifetime) ripples.splice(index, 1);
       }
-      signals.forEach((signal) => { signal.t += delta / 70; });
+      signals.forEach((signal) => {
+        signal.t += delta / 70;
+      });
       signals = signals.filter((signal) => signal.t < 1);
 
       const damping = 0.96 ** delta;
@@ -213,7 +256,8 @@ export function ParticleField() {
           const dy = particle.y - pointer.y;
           const distance = Math.hypot(dx, dy);
           if (distance > 0.001 && distance < pointerRadius) {
-            const force = (1 - distance / pointerRadius) ** 2 * 0.35 * pointer.strength * particle.z * delta;
+            const force =
+              (1 - distance / pointerRadius) ** 2 * 0.35 * pointer.strength * particle.z * delta;
             particle.vx += (dx / distance) * force;
             particle.vy += (dy / distance) * force;
           }
@@ -262,11 +306,17 @@ export function ParticleField() {
     };
     const onMove = (event: PointerEvent) => {
       if (!animationId) return;
-      pointer = pointer ? { ...pointer, x: event.clientX, y: event.clientY } : { x: event.clientX, y: event.clientY, strength: 0 };
+      pointer = pointer
+        ? { ...pointer, x: event.clientX, y: event.clientY }
+        : { x: event.clientX, y: event.clientY, strength: 0 };
       targetPointerStrength = 1;
     };
     const onEnd = (event: PointerEvent) => {
-      if ((event.type === "pointerout" && event.relatedTarget) || (event.type === "pointerup" && event.pointerType === "mouse")) return;
+      if (
+        (event.type === "pointerout" && event.relatedTarget) ||
+        (event.type === "pointerup" && event.pointerType === "mouse")
+      )
+        return;
       targetPointerStrength = 0;
     };
     const onDown = (event: PointerEvent) => {
@@ -274,10 +324,16 @@ export function ParticleField() {
       if (ripples.length >= 4) ripples.shift();
       ripples.push({ x: event.clientX, y: event.clientY, age: 0 });
     };
-    const onVisibility = () => document.hidden ? stop() : start();
+    const onVisibility = () => (document.hidden ? stop() : start());
     const onMotionChange = () => {
       if (reducedMotion.matches) {
-        stop(); pointer = null; ripples = []; signals = []; parallaxX = 0; parallaxY = 0; draw();
+        stop();
+        pointer = null;
+        ripples = [];
+        signals = [];
+        parallaxX = 0;
+        parallaxY = 0;
+        draw();
       } else start();
     };
 

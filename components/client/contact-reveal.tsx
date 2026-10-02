@@ -48,7 +48,11 @@ export function ContactReveal({ sitekey }: ContactRevealProps) {
 
   function startCaptcha() {
     if (!sitekey) {
-      setMessage(withoutFinalPeriod("Капча ещё не настроена. Добавьте ключ SmartCaptcha в переменные окружения."));
+      setMessage(
+        withoutFinalPeriod(
+          "Капча ещё не настроена. Добавьте ключ SmartCaptcha в переменные окружения.",
+        ),
+      );
       return;
     }
 
@@ -56,7 +60,53 @@ export function ContactReveal({ sitekey }: ContactRevealProps) {
     setCaptchaVisible(true);
   }
 
-  return <div className="contact-reveal"><div className="contact-reveal__control">{contacts ? <a className="contact-phone" href={`tel:${contacts.phone.replace(/[^+\d]/g, "")}`}>{contacts.phone}</a> : <Button type="button" className="action primary" onClick={startCaptcha} disabled={isLoading}>{isLoading ? "Проверяем…" : "Показать телефон"}</Button>}</div>{sitekey ? <InvisibleSmartCaptcha sitekey={sitekey} language="ru" visible={captchaVisible} hideShield onChallengeHidden={() => setCaptchaVisible(false)} onSuccess={revealContacts} onNetworkError={() => { setCaptchaVisible(false); setMessage(withoutFinalPeriod("Не удалось загрузить капчу. Попробуйте ещё раз.")); }} onJavascriptError={() => { setCaptchaVisible(false); setMessage(withoutFinalPeriod("Не удалось загрузить капчу. Попробуйте ещё раз.")); }} onTokenExpired={() => { setCaptchaVisible(false); setMessage(withoutFinalPeriod("Срок проверки истёк. Попробуйте ещё раз.")); }} /> : null}{message ? <p className="contact-reveal__status" role="alert">{message}</p> : null}</div>;
+  return (
+    <div className="contact-reveal">
+      <div className="contact-reveal__control">
+        {contacts ? (
+          <a className="contact-phone" href={`tel:${contacts.phone.replace(/[^+\d]/g, "")}`}>
+            {contacts.phone}
+          </a>
+        ) : (
+          <Button
+            type="button"
+            className="action primary"
+            onClick={startCaptcha}
+            disabled={isLoading}
+          >
+            {isLoading ? "Проверяем…" : "Показать телефон"}
+          </Button>
+        )}
+      </div>
+      {sitekey ? (
+        <InvisibleSmartCaptcha
+          sitekey={sitekey}
+          language="ru"
+          visible={captchaVisible}
+          hideShield
+          onChallengeHidden={() => setCaptchaVisible(false)}
+          onSuccess={revealContacts}
+          onNetworkError={() => {
+            setCaptchaVisible(false);
+            setMessage(withoutFinalPeriod("Не удалось загрузить капчу. Попробуйте ещё раз."));
+          }}
+          onJavascriptError={() => {
+            setCaptchaVisible(false);
+            setMessage(withoutFinalPeriod("Не удалось загрузить капчу. Попробуйте ещё раз."));
+          }}
+          onTokenExpired={() => {
+            setCaptchaVisible(false);
+            setMessage(withoutFinalPeriod("Срок проверки истёк. Попробуйте ещё раз."));
+          }}
+        />
+      ) : null}
+      {message ? (
+        <p className="contact-reveal__status" role="alert">
+          {message}
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
 function isContactDetails(value: unknown): value is ContactDetails {
@@ -66,6 +116,12 @@ function isContactDetails(value: unknown): value is ContactDetails {
 }
 
 function getErrorMessage(value: unknown) {
-  if (typeof value === "object" && value !== null && "error" in value && typeof value.error === "string") return withoutFinalPeriod(value.error);
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "error" in value &&
+    typeof value.error === "string"
+  )
+    return withoutFinalPeriod(value.error);
   return withoutFinalPeriod("Не удалось подтвердить проверку. Попробуйте ещё раз.");
 }

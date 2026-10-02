@@ -27,5 +27,24 @@ export function EmailCopyLink({ email }: EmailCopyLinkProps) {
     }
   }
 
-  return <div className="contact-email"><button type="button" className="contact-github contact-email__button" onClick={copyEmail} aria-describedby="email-copy-status">{copied ? <Check size={20} /> : <Mail size={20} />}{copied ? "Почта скопирована" : <>Почта / {email}</>}</button><p id="email-copy-status" className={error ? "contact-email__status" : "sr-only"} role="status">{error ? "Не удалось скопировать адрес" : copied ? "Почта скопирована" : ""}</p></div>;
+  return (
+    <div className="contact-email">
+      <button
+        type="button"
+        className="contact-github contact-email__button"
+        onClick={copyEmail}
+        aria-describedby="email-copy-status"
+      >
+        {copied ? <Check size={20} /> : <Mail size={20} />}
+        {copied ? "Почта скопирована" : <>Почта / {email}</>}
+      </button>
+      <p
+        id="email-copy-status"
+        className={error ? "contact-email__status" : "sr-only"}
+        role="status"
+      >
+        {error ? "Не удалось скопировать адрес" : copied ? "Почта скопирована" : ""}
+      </p>
+    </div>
+  );
 }

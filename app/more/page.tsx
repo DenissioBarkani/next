@@ -4,4 +4,6 @@ import { morePage } from "@/content/pages";
 
 export const metadata: Metadata = morePage.metadata;
 
-export default function More() { return <MorePageContent data={morePage}/>; }
+export default function More() {
+  return <MorePageContent data={morePage} />;
+}

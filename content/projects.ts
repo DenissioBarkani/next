@@ -89,94 +89,713 @@ export type Project = {
   };
   readonly media: readonly ProjectMedia[];
   readonly examples: readonly CodeExample[];
-  readonly codeSection?: { readonly title: string; readonly intro: string; readonly eyebrow?: string };
+  readonly codeSection?: {
+    readonly title: string;
+    readonly intro: string;
+    readonly eyebrow?: string;
+  };
   readonly timeline?: { readonly suffix?: string; readonly text: string };
 };
 
 const sourceExamples = {
   "DenissioBarkani/student-dep": {
     files: [
-      { path: "app/page.tsx", language: "tsx", code: "  useEffect(() => {\n    const fetchData = async () => {\n      try {\n        setLoading(true);\n        const data = await fetchCompany(currentPage, perPage);\n        setCompanies(data.companyData);\n        setPaginationData({\n          pages: data.pages,\n          totalItems: data.items,\n        });\n        setSearch(false);\n      } catch (error) {\n        console.error(\"Error loading products:\", error);\n        setCompanies([]);\n        setSearch(false);\n      } finally {\n        setLoading(false);\n      }\n    };\n    if (!search) {\n      fetchData();\n    }\n  }, [currentPage, search, setCompanies, setSearch]);", sourceUrl: "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/app/page.tsx#L71-L93", summary: "Загрузка данных для текущей страницы: loading, обновление пагинации и обработка ошибок.", startLine: 71, endLine: 93 },
-      { path: "components/shared/company-card.tsx", language: "tsx", code: "import Link from \"next/link\";\nimport React from \"react\";\nimport { Title } from \"./title\";\nimport { Button } from \"../ui\";\nimport { ArrowRight } from \"lucide-react\";\nimport Image from \"next/image\"; // Импортируем компонент Image\nimport { cn } from \"@/lib/utils\";\nimport { Tag } from \"./tag\";\n\n\ninterface CompanyTag {\n  id: number;\n  text: string;\n}\n\nexport interface CompanyProps {\n  id: number;\n  name: string;\n  imageUrl: string;\n  description: string;\n  tags: CompanyTag[];\n  deadline: string;\n  places: number;\n  className?: string;\n}\n\nexport const CompanyCard: React.FC<CompanyProps> = ({\n  id,\n  name,\n  imageUrl,\n  description,\n  tags,\n  deadline,\n  places,\n  className,\n}) => {\n\n  return (\n    <Link\n      href={`/company/${id}`}\n      className={cn(\n        \"h-full flex flex-col rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg\",\n        className\n      )}>\n      <div className=\"relative h-56\">\n        <Image\n          src={imageUrl}\n          width={1140}\n          height={900}\n          alt={name}\n          className=\"h-full object-cover object-top md:object-top\"\n          loading={id > 5 ? \"eager\" : \"lazy\"}\n          priority={id <= 5 ? false : true}\n        />\n      </div>\n\n      <div className=\"p-3 flex flex-col flex-grow\">\n        <div className=\"flex flex-wrap gap-2 mb-3\">\n          {tags.map((tag) => (\n            <Tag\n              className=\"px-2 py-1 bg-muted rounded-[4px] text-[10px] text-muted-foreground\"\n              key={tag.id}\n              variant=\"default\"\n              size=\"sm\">\n              {tag.text}\n            </Tag>\n          ))}\n        </div>\n\n        <Title\n          text={name}\n          size=\"sm\"\n          className=\"text-lg font-medium mb-2.5 leading-5\"\n        />\n\n        <div className=\"flex-grow\">\n          <p className=\"text-sm text-muted-foreground line-clamp-4\">\n            {description}\n          </p>\n        </div>\n\n        <div className=\"mt-2.5\">\n          <time\n            dateTime=\"2023-12-31\"\n            className=\"inline-block px-2 py-1 text-[10px] text-time-secondary bg-time-primary rounded-lg\">\n            Приём заявок до: {deadline}\n          </time>\n\n          <div className=\"flex justify-between items-center\">\n            <div className=\"text-base\">\n              <span className=\"text-primary font-semibold\">{places}</span> мест\n            </div>\n\n            <Button\n              variant=\"link\"\n              size={\"link\"}\n              textSize={\"lg\"}\n              className=\"gap-1 text-lg\">\n              Подробнее\n              <ArrowRight size={18} />\n            </Button>\n          </div>\n        </div>\n      </div>\n    </Link>\n  );\n};", sourceUrl: "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/company-card.tsx#L1-L107", summary: "Типизированная карточка предложения компании: изображение, теги, описание и переход на подробную страницу.", startLine: 1, endLine: 107 },
-      { path: "components/shared/checkbox-filters-group.tsx", language: "tsx", code: "import { cn } from \"@/lib/utils\";\nimport React from \"react\";\nimport { Title } from \"./title\";\n\nimport { FilterCheckboxProps, FilterCheckbox } from \"./filter-checkbox\";\n\ntype Item = FilterCheckboxProps;\n\ninterface Props {\n  items: Item[];\n  title: string;\n  className?: string;\n  limit?: number;\n}\n\nexport const CheckboxFiltersGroup: React.FC<Props> = ({\n  title,\n  items = [],\n  limit = 5,\n  className,\n}) => {\n  const [showAll, setShowAll] = React.useState(false);\n\n  const list = showAll ? items : items.slice(0, limit);\n  return (\n    <div className={cn(\"\", className)}>\n      <Title size=\"sm\" className=\"mb-5 font-bold\" text={title} />\n\n      <div className=\"space-y-2 max-h-50 overflow-auto scrollbar\">\n        {list.map((item, index) => (\n          <FilterCheckbox key={index} text={item.text} value={item.value} />\n        ))}\n      </div>\n      {items.length > limit && items.length != 0 && (\n        <button\n          onClick={() => setShowAll(!showAll)}\n          className=\"text-primary mt-2 inline-block\">\n          {showAll ? \"Скрыть\" : \"+ Показать все\"}\n        </button>\n      )}\n    </div>\n  );\n};", sourceUrl: "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/checkbox-filters-group.tsx#L1-L43", summary: "Группа фильтров с ограниченным числом видимых вариантов и раскрытием списка.", startLine: 1, endLine: 43 },
+      {
+        path: "app/page.tsx",
+        language: "tsx",
+        code: '  useEffect(() => {\n    const fetchData = async () => {\n      try {\n        setLoading(true);\n        const data = await fetchCompany(currentPage, perPage);\n        setCompanies(data.companyData);\n        setPaginationData({\n          pages: data.pages,\n          totalItems: data.items,\n        });\n        setSearch(false);\n      } catch (error) {\n        console.error("Error loading products:", error);\n        setCompanies([]);\n        setSearch(false);\n      } finally {\n        setLoading(false);\n      }\n    };\n    if (!search) {\n      fetchData();\n    }\n  }, [currentPage, search, setCompanies, setSearch]);',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/app/page.tsx#L71-L93",
+        summary:
+          "Загрузка данных для текущей страницы: loading, обновление пагинации и обработка ошибок.",
+        startLine: 71,
+        endLine: 93,
+      },
+      {
+        path: "components/shared/company-card.tsx",
+        language: "tsx",
+        code: 'import Link from "next/link";\nimport React from "react";\nimport { Title } from "./title";\nimport { Button } from "../ui";\nimport { ArrowRight } from "lucide-react";\nimport Image from "next/image"; // Импортируем компонент Image\nimport { cn } from "@/lib/utils";\nimport { Tag } from "./tag";\n\n\ninterface CompanyTag {\n  id: number;\n  text: string;\n}\n\nexport interface CompanyProps {\n  id: number;\n  name: string;\n  imageUrl: string;\n  description: string;\n  tags: CompanyTag[];\n  deadline: string;\n  places: number;\n  className?: string;\n}\n\nexport const CompanyCard: React.FC<CompanyProps> = ({\n  id,\n  name,\n  imageUrl,\n  description,\n  tags,\n  deadline,\n  places,\n  className,\n}) => {\n\n  return (\n    <Link\n      href={`/company/${id}`}\n      className={cn(\n        "h-full flex flex-col rounded-2xl border shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg",\n        className\n      )}>\n      <div className="relative h-56">\n        <Image\n          src={imageUrl}\n          width={1140}\n          height={900}\n          alt={name}\n          className="h-full object-cover object-top md:object-top"\n          loading={id > 5 ? "eager" : "lazy"}\n          priority={id <= 5 ? false : true}\n        />\n      </div>\n\n      <div className="p-3 flex flex-col flex-grow">\n        <div className="flex flex-wrap gap-2 mb-3">\n          {tags.map((tag) => (\n            <Tag\n              className="px-2 py-1 bg-muted rounded-[4px] text-[10px] text-muted-foreground"\n              key={tag.id}\n              variant="default"\n              size="sm">\n              {tag.text}\n            </Tag>\n          ))}\n        </div>\n\n        <Title\n          text={name}\n          size="sm"\n          className="text-lg font-medium mb-2.5 leading-5"\n        />\n\n        <div className="flex-grow">\n          <p className="text-sm text-muted-foreground line-clamp-4">\n            {description}\n          </p>\n        </div>\n\n        <div className="mt-2.5">\n          <time\n            dateTime="2023-12-31"\n            className="inline-block px-2 py-1 text-[10px] text-time-secondary bg-time-primary rounded-lg">\n            Приём заявок до: {deadline}\n          </time>\n\n          <div className="flex justify-between items-center">\n            <div className="text-base">\n              <span className="text-primary font-semibold">{places}</span> мест\n            </div>\n\n            <Button\n              variant="link"\n              size={"link"}\n              textSize={"lg"}\n              className="gap-1 text-lg">\n              Подробнее\n              <ArrowRight size={18} />\n            </Button>\n          </div>\n        </div>\n      </div>\n    </Link>\n  );\n};',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/company-card.tsx#L1-L107",
+        summary:
+          "Типизированная карточка предложения компании: изображение, теги, описание и переход на подробную страницу.",
+        startLine: 1,
+        endLine: 107,
+      },
+      {
+        path: "components/shared/checkbox-filters-group.tsx",
+        language: "tsx",
+        code: 'import { cn } from "@/lib/utils";\nimport React from "react";\nimport { Title } from "./title";\n\nimport { FilterCheckboxProps, FilterCheckbox } from "./filter-checkbox";\n\ntype Item = FilterCheckboxProps;\n\ninterface Props {\n  items: Item[];\n  title: string;\n  className?: string;\n  limit?: number;\n}\n\nexport const CheckboxFiltersGroup: React.FC<Props> = ({\n  title,\n  items = [],\n  limit = 5,\n  className,\n}) => {\n  const [showAll, setShowAll] = React.useState(false);\n\n  const list = showAll ? items : items.slice(0, limit);\n  return (\n    <div className={cn("", className)}>\n      <Title size="sm" className="mb-5 font-bold" text={title} />\n\n      <div className="space-y-2 max-h-50 overflow-auto scrollbar">\n        {list.map((item, index) => (\n          <FilterCheckbox key={index} text={item.text} value={item.value} />\n        ))}\n      </div>\n      {items.length > limit && items.length != 0 && (\n        <button\n          onClick={() => setShowAll(!showAll)}\n          className="text-primary mt-2 inline-block">\n          {showAll ? "Скрыть" : "+ Показать все"}\n        </button>\n      )}\n    </div>\n  );\n};',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/checkbox-filters-group.tsx#L1-L43",
+        summary: "Группа фильтров с ограниченным числом видимых вариантов и раскрытием списка.",
+        startLine: 1,
+        endLine: 43,
+      },
     ],
   },
   "DenissioBarkani/student-profile-portfolio": {
     files: [
-      { path: "components/shared/filters.tsx", language: "tsx", code: "export const Filters: React.FC<Props> = ({ className, sections = [] }) => {\n  const [radioValues, setRadioValues] = React.useState<Record<number, string>>({});\n\n  return (\n    <div className={cn(\"hidden w-full md:block md:w-[250px]\", className)}>\n      <div className=\"space-y-4\">\n        {sections.map((section, index) => (\n          <div key={index}>\n            {section.type === \"radio\" ? (\n              <FilterRadioGroup\n                options={section.options as RadioOptionProps[]}\n                selected={radioValues[index] || section.options[0].value}\n                onValueChange={(value) =>\n                  setRadioValues((prev) => ({ ...prev, [index]: value }))\n                }\n                title={section.title}\n              />\n            ) : (\n              <CheckboxFiltersGroup\n                title={section.title}\n                items={section.options as FilterCheckboxProps[]}\n              />\n            )}\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};", sourceUrl: "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/filters.tsx", summary: "Группы radio и checkbox строятся из переданной конфигурации; компонент отвечает за отображение и локальное состояние элементов управления." },
-      { path: "components/shared/student-profile/soft-skills-chart.tsx", language: "tsx", code: "const CustomAxisTick = ({ x = 0, y = 0, payload }: AxisTickProps) => {\n  if (!payload) return null;\n\n  const words = payload.value.split(\" \");\n  const lineHeight = 15;\n\n  return (\n    <g transform={`translate(${x},${y})`}>\n      {words.map((word: string, index: number) => (\n        <text\n          key={index}\n          x={0}\n          y={index * lineHeight}\n          dy={10}\n          textAnchor=\"middle\"\n          fill=\"#6b7280\"\n          fontSize=\"11\">\n          {word}\n        </text>\n      ))}\n    </g>\n  );\n};", sourceUrl: "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/student-profile/soft-skills-chart.tsx", summary: "Собственный рендер подписей Recharts: длинное название навыка разбивается на строки внутри SVG." },
-      { path: "components/shared/tab-bar.tsx", language: "tsx", code: "<li className=\"flex-1\">\n  <Link\n    href=\"/\"\n    className={cn(\n      \"flex flex-col items-center justify-center h-full gap-1 text-sm font-medium transition-colors\",\n      pathname === \"/\"\n        ? \"text-primary\"\n        : \"text-muted-foreground hover:text-foreground\"\n    )}>\n    <Briefcase\n      size={20}\n      className={cn(\n        \"transition-transform\",\n        pathname === \"/\" && \"scale-120\"\n      )}\n    />\n    <span className=\"text-xs\">Стажировки</span>\n  </Link>\n</li>", sourceUrl: "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/tab-bar.tsx", summary: "Пункт нижней навигации меняет оформление в зависимости от текущего маршрута через usePathname()." },
+      {
+        path: "components/shared/filters.tsx",
+        language: "tsx",
+        code: 'export const Filters: React.FC<Props> = ({ className, sections = [] }) => {\n  const [radioValues, setRadioValues] = React.useState<Record<number, string>>({});\n\n  return (\n    <div className={cn("hidden w-full md:block md:w-[250px]", className)}>\n      <div className="space-y-4">\n        {sections.map((section, index) => (\n          <div key={index}>\n            {section.type === "radio" ? (\n              <FilterRadioGroup\n                options={section.options as RadioOptionProps[]}\n                selected={radioValues[index] || section.options[0].value}\n                onValueChange={(value) =>\n                  setRadioValues((prev) => ({ ...prev, [index]: value }))\n                }\n                title={section.title}\n              />\n            ) : (\n              <CheckboxFiltersGroup\n                title={section.title}\n                items={section.options as FilterCheckboxProps[]}\n              />\n            )}\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/filters.tsx",
+        summary:
+          "Группы radio и checkbox строятся из переданной конфигурации; компонент отвечает за отображение и локальное состояние элементов управления.",
+      },
+      {
+        path: "components/shared/student-profile/soft-skills-chart.tsx",
+        language: "tsx",
+        code: 'const CustomAxisTick = ({ x = 0, y = 0, payload }: AxisTickProps) => {\n  if (!payload) return null;\n\n  const words = payload.value.split(" ");\n  const lineHeight = 15;\n\n  return (\n    <g transform={`translate(${x},${y})`}>\n      {words.map((word: string, index: number) => (\n        <text\n          key={index}\n          x={0}\n          y={index * lineHeight}\n          dy={10}\n          textAnchor="middle"\n          fill="#6b7280"\n          fontSize="11">\n          {word}\n        </text>\n      ))}\n    </g>\n  );\n};',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/student-profile/soft-skills-chart.tsx",
+        summary:
+          "Собственный рендер подписей Recharts: длинное название навыка разбивается на строки внутри SVG.",
+      },
+      {
+        path: "components/shared/tab-bar.tsx",
+        language: "tsx",
+        code: '<li className="flex-1">\n  <Link\n    href="/"\n    className={cn(\n      "flex flex-col items-center justify-center h-full gap-1 text-sm font-medium transition-colors",\n      pathname === "/"\n        ? "text-primary"\n        : "text-muted-foreground hover:text-foreground"\n    )}>\n    <Briefcase\n      size={20}\n      className={cn(\n        "transition-transform",\n        pathname === "/" && "scale-120"\n      )}\n    />\n    <span className="text-xs">Стажировки</span>\n  </Link>\n</li>',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/student-dep/blob/d48b17c3a72f4d897c119a798bc4ff9351d28035/components/shared/tab-bar.tsx",
+        summary:
+          "Пункт нижней навигации меняет оформление в зависимости от текущего маршрута через usePathname().",
+      },
     ],
   },
   "DenissioBarkani/vue-sneakers": {
     demoUrl: "https://denissiobarkani.github.io/vue-sneakers/",
     files: [
-      { path: "src/App.vue", language: "vue", code: "const addToCart = (item) => {\n  // не добавляем дубликаты\n  if (!cart.value.some((ci) => ci.id === item.id)) {\n    cart.value.push(item)\n  }\n  item.isAdded = true\n}\nconst removeFromCart = (item) => {\n  const idx = cart.value.findIndex((ci) => ci.id === item.id)\n  if (idx !== -1) {\n    cart.value.splice(idx, 1)\n  }\n  item.isAdded = false\n}\n\nconst drawerOpen = ref(false)\nconst closeDrawer = () => {\n  drawerOpen.value = false\n}\nconst openDrawer = () => {\n  drawerOpen.value = true\n}\nprovide('cart', {\n  cart,\n  closeDrawer,\n  openDrawer,\n  addToCart,\n  removeFromCart,\n})", sourceUrl: "https://github.com/DenissioBarkani/vue-sneakers/blob/c1b7ae17f9c1365c41d625717c9f69af8c4b6b04/src/App.vue#L46-L74", summary: "Добавление без дубликатов, удаление из корзины и общий интерфейс действий через provide.", startLine: 46, endLine: 74 },
-      { path: "src/components/CardList.vue", language: "vue", code: "<script setup>\nimport { inject } from 'vue'\nimport Card from './Card.vue'\n\ndefineProps({\n  items: Array,\n  isFavorites: Boolean,\n})\n\nconst emit = defineEmits(['addToFavorite', 'addToCart'])\n\n</script>\n\n<template>\n  <div v-auto-animate class=\"grid grid-cols-4 gap-5\">\n    <Card\n      v-for=\"item in items\"\n      :id=\"item.id\"\n      :key=\"item.id\"\n      :title=\"item.title\"\n      :image-url=\"item.imageUrl\"\n      :price=\"item.price\"\n      :is-added=\"item.isAdded\"\n      :is-favorite=\"item.isFavorite\"\n      :on-click-favorite=\"() => emit('addToFavorite', item)\"\n      :on-click-add=\"isFavorites ? null :() => emit('addToCart', item)\"\n    />\n  </div>\n</template>", sourceUrl: "https://github.com/DenissioBarkani/vue-sneakers/blob/c1b7ae17f9c1365c41d625717c9f69af8c4b6b04/src/components/CardList.vue#L1-L29", summary: "Список карточек с передачей состояния и событиями избранного/корзины.", startLine: 1, endLine: 29 },
-      { path: "src/pages/Home.vue", language: "vue", code: "<!-- eslint-disable vue/multi-word-component-names -->\n<script setup>\nimport { inject, onMounted, reactive, ref, watch } from 'vue'\nimport CardList from '../components/CardList.vue'\nimport debounce from 'lodash.debounce'\nimport axios from 'axios'\nconst {cart, addToCart, removeFromCart } = inject('cart')\nconst items = ref([])\nconst filters = reactive({\n  sortBy: 'title',\n  searchQuery: '',\n})\nconst onChangeSelect = (event) => {\n  filters.sortBy = event.target.value\n}\n\nconst onChangeInput = debounce((event) => {\n  filters.searchQuery = event.target.value\n}, 300)", sourceUrl: "https://github.com/DenissioBarkani/vue-sneakers/blob/c1b7ae17f9c1365c41d625717c9f69af8c4b6b04/src/pages/Home.vue#L1-L19", summary: "Реактивные параметры сортировки и поиска с debounce 300 мс.", startLine: 1, endLine: 19 },
+      {
+        path: "src/App.vue",
+        language: "vue",
+        code: "const addToCart = (item) => {\n  // не добавляем дубликаты\n  if (!cart.value.some((ci) => ci.id === item.id)) {\n    cart.value.push(item)\n  }\n  item.isAdded = true\n}\nconst removeFromCart = (item) => {\n  const idx = cart.value.findIndex((ci) => ci.id === item.id)\n  if (idx !== -1) {\n    cart.value.splice(idx, 1)\n  }\n  item.isAdded = false\n}\n\nconst drawerOpen = ref(false)\nconst closeDrawer = () => {\n  drawerOpen.value = false\n}\nconst openDrawer = () => {\n  drawerOpen.value = true\n}\nprovide('cart', {\n  cart,\n  closeDrawer,\n  openDrawer,\n  addToCart,\n  removeFromCart,\n})",
+        sourceUrl:
+          "https://github.com/DenissioBarkani/vue-sneakers/blob/c1b7ae17f9c1365c41d625717c9f69af8c4b6b04/src/App.vue#L46-L74",
+        summary:
+          "Добавление без дубликатов, удаление из корзины и общий интерфейс действий через provide.",
+        startLine: 46,
+        endLine: 74,
+      },
+      {
+        path: "src/components/CardList.vue",
+        language: "vue",
+        code: '<script setup>\nimport { inject } from \'vue\'\nimport Card from \'./Card.vue\'\n\ndefineProps({\n  items: Array,\n  isFavorites: Boolean,\n})\n\nconst emit = defineEmits([\'addToFavorite\', \'addToCart\'])\n\n</script>\n\n<template>\n  <div v-auto-animate class="grid grid-cols-4 gap-5">\n    <Card\n      v-for="item in items"\n      :id="item.id"\n      :key="item.id"\n      :title="item.title"\n      :image-url="item.imageUrl"\n      :price="item.price"\n      :is-added="item.isAdded"\n      :is-favorite="item.isFavorite"\n      :on-click-favorite="() => emit(\'addToFavorite\', item)"\n      :on-click-add="isFavorites ? null :() => emit(\'addToCart\', item)"\n    />\n  </div>\n</template>',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/vue-sneakers/blob/c1b7ae17f9c1365c41d625717c9f69af8c4b6b04/src/components/CardList.vue#L1-L29",
+        summary: "Список карточек с передачей состояния и событиями избранного/корзины.",
+        startLine: 1,
+        endLine: 29,
+      },
+      {
+        path: "src/pages/Home.vue",
+        language: "vue",
+        code: "<!-- eslint-disable vue/multi-word-component-names -->\n<script setup>\nimport { inject, onMounted, reactive, ref, watch } from 'vue'\nimport CardList from '../components/CardList.vue'\nimport debounce from 'lodash.debounce'\nimport axios from 'axios'\nconst {cart, addToCart, removeFromCart } = inject('cart')\nconst items = ref([])\nconst filters = reactive({\n  sortBy: 'title',\n  searchQuery: '',\n})\nconst onChangeSelect = (event) => {\n  filters.sortBy = event.target.value\n}\n\nconst onChangeInput = debounce((event) => {\n  filters.searchQuery = event.target.value\n}, 300)",
+        sourceUrl:
+          "https://github.com/DenissioBarkani/vue-sneakers/blob/c1b7ae17f9c1365c41d625717c9f69af8c4b6b04/src/pages/Home.vue#L1-L19",
+        summary: "Реактивные параметры сортировки и поиска с debounce 300 мс.",
+        startLine: 1,
+        endLine: 19,
+      },
     ],
   },
   "DenissioBarkani/Ai-artdir": {
     demoUrl: "https://denissiobarkani.github.io/Ai-artdir/",
     files: [
-      { path: "index.html", language: "html", code: "                <div class=\"header__body\">\n                    <div class=\"header__inner\">\n            \n                        <div class=\"header__left\">\n                            <div class=\"header__logo\" data-scroll=\"#page\">\n                                <img src=\"assets/images/logo.svg\" alt=\"Лого ЭйАй\">\n                            </div>\n                        </div>\n            \n            \n                        <div class=\"header__right\">\n            \n                            <nav class=\"nav__list\">\n                                <a class=\"nav__link\" data-scroll=\"#how\">Как это работает</a>\n                                <a class=\"nav__link\" data-scroll=\"#think\">Преимущества</a>\n                                <a class=\"nav__link\" data-scroll=\"#pricing\">Прайсинг</a>\n                                <a class=\"nav__link\" data-scroll=\"#techno\">Технологии</a>\n                                <a class=\"nav__link\" data-scroll=\"#reviews\">Отзывы</a>\n                            </nav>\n            \n                            <div class=\"header__button\">\n                                <button class=\"btn__gradient\" href=\"#\" data-modal=\"donat-modal\">Платить сюда</button>\n                            </div>\n            \n                            <div class=\"header__arrow fixed\">\n                                <img src=\"assets/images/arro.svg\" alt=\"\">\n                            </div>\n            \n                        </div>\n            \n                    </div>", sourceUrl: "https://github.com/DenissioBarkani/Ai-artdir/blob/0a4d372f94a8cf3acfc53bd6f05d822e6d48a768/index.html#L49-L79", summary: "Разметка шапки и навигации: имена классов по БЭМ и data-атрибуты для переходов и модального окна.", startLine: 49, endLine: 79 },
-      { path: "assets/css/style.css", language: "css", code: ".table {\n    display: none;\n    -ms-flex-pack: justify;\n    justify-content: space-between;\n}\n\n.table.active {\n    display: -ms-flexbox;\n    display: flex;\n}\n\n@media (max-width: 1079px) {\n    .table.active {\n        display: none;\n    }\n}\n\n.table--mobile {\n    display: none;\n}\n\n@media (max-width: 1079px) {\n    .table--mobile.active {\n        display: grid;\n    }\n}\n\n.table__item {\n    width: 252px;\n    text-align: center;\n}\n\n@media (max-width: 1079px) {\n    .table__item {\n        width: 100%;\n        margin-bottom: 16px;\n    }\n}", sourceUrl: "https://github.com/DenissioBarkani/Ai-artdir/blob/0a4d372f94a8cf3acfc53bd6f05d822e6d48a768/assets/css/style.css#L1068-L1105", summary: "CSS для разных вариантов таблицы тарифов: desktop flex и mobile grid через медиазапрос.", startLine: 1068, endLine: 1105 },
+      {
+        path: "index.html",
+        language: "html",
+        code: '                <div class="header__body">\n                    <div class="header__inner">\n            \n                        <div class="header__left">\n                            <div class="header__logo" data-scroll="#page">\n                                <img src="assets/images/logo.svg" alt="Лого ЭйАй">\n                            </div>\n                        </div>\n            \n            \n                        <div class="header__right">\n            \n                            <nav class="nav__list">\n                                <a class="nav__link" data-scroll="#how">Как это работает</a>\n                                <a class="nav__link" data-scroll="#think">Преимущества</a>\n                                <a class="nav__link" data-scroll="#pricing">Прайсинг</a>\n                                <a class="nav__link" data-scroll="#techno">Технологии</a>\n                                <a class="nav__link" data-scroll="#reviews">Отзывы</a>\n                            </nav>\n            \n                            <div class="header__button">\n                                <button class="btn__gradient" href="#" data-modal="donat-modal">Платить сюда</button>\n                            </div>\n            \n                            <div class="header__arrow fixed">\n                                <img src="assets/images/arro.svg" alt="">\n                            </div>\n            \n                        </div>\n            \n                    </div>',
+        sourceUrl:
+          "https://github.com/DenissioBarkani/Ai-artdir/blob/0a4d372f94a8cf3acfc53bd6f05d822e6d48a768/index.html#L49-L79",
+        summary:
+          "Разметка шапки и навигации: имена классов по БЭМ и data-атрибуты для переходов и модального окна.",
+        startLine: 49,
+        endLine: 79,
+      },
+      {
+        path: "assets/css/style.css",
+        language: "css",
+        code: ".table {\n    display: none;\n    -ms-flex-pack: justify;\n    justify-content: space-between;\n}\n\n.table.active {\n    display: -ms-flexbox;\n    display: flex;\n}\n\n@media (max-width: 1079px) {\n    .table.active {\n        display: none;\n    }\n}\n\n.table--mobile {\n    display: none;\n}\n\n@media (max-width: 1079px) {\n    .table--mobile.active {\n        display: grid;\n    }\n}\n\n.table__item {\n    width: 252px;\n    text-align: center;\n}\n\n@media (max-width: 1079px) {\n    .table__item {\n        width: 100%;\n        margin-bottom: 16px;\n    }\n}",
+        sourceUrl:
+          "https://github.com/DenissioBarkani/Ai-artdir/blob/0a4d372f94a8cf3acfc53bd6f05d822e6d48a768/assets/css/style.css#L1068-L1105",
+        summary:
+          "CSS для разных вариантов таблицы тарифов: desktop flex и mobile grid через медиазапрос.",
+        startLine: 1068,
+        endLine: 1105,
+      },
     ],
   },
-} as const satisfies Record<string, { readonly files: readonly CodeExample[]; readonly demoUrl?: string }>;
+} as const satisfies Record<
+  string,
+  { readonly files: readonly CodeExample[]; readonly demoUrl?: string }
+>;
 
 const projectSource = [
   {
-    slug: "tournament-platform", title: "B2B-платформа турниров", shortTitle: "Турниры", kind: { label: "Коммерческий проект" }, year: "2025 — 2026", summary: "Платформа для организации турниров: от регистрации участников до судейства и публикации результатов.", description: "Платформа для организации турниров по единоборствам — от регистрации участников до судейства и публикации результатов. Около года работал над клиентской частью в команде заказчика; проект также стал моей выпускной квалификационной работой.", heroNote: "Платформа использовалась для проведения двух турниров полного цикла.", role: "Frontend-разработчик · команда: дизайнер интерфейса, backend- и full-stack-разработчики", stack: ["Vue 3", "Nuxt", "TypeScript", "Tailwind CSS", "Vue Query", "Pinia", "REST API"], tasks: [], decisions: [], caseStudy: { task: ["Заказчику — организатору турниров по бразильскому джиу-джитсу и грэпплингу — требовалась единая система для подготовки и проведения соревнований. Вместо отдельных форм регистрации, таблиц, бумажных протоколов и чатов команда объединила регистрацию участников, управление категориями и турнирными сетками, судейство и публикацию результатов.", "Отвечал за основную часть вёрстки: основные экраны, правки и разработку новых интерфейсных фич — галерею, автоподстановку и другие детали. Работал с дизайнером, backend- и full-stack-разработчиками. Критически важным сценарием была работа в день турнира: управление очередью схваток, счётом и таймером, а также синхронизация судейской панели со зрительским табло."], contributions: [{ title: "Интерфейсы судейства", text: "Разрабатывал клиентские экраны для ведения схватки: отображение счёта и таймера, элементы управления и действия по результату. Реализовывал адаптивную вёрстку и UI-компоненты этих экранов.", media: [{ type: "image", src: "/projects/tournament-platform/judge-panel.webp", alt: "Панель судейства с таймером и управлением счётом схватки", caption: "Рабочее место судьи: счёт, таймер и действия по результату схватки. Мой вклад — адаптивная вёрстка и клиентские UI-компоненты.", width: 1280, height: 662 }] }, { title: "Турнирные сетки и фильтрация", text: "Реализовывал интерфейсы просмотра сеток, поиск и фильтры по категориям. Работал над связанными состояниями интерфейса и пользовательскими действиями.", media: [{ type: "image", src: "/projects/tournament-platform/brackets-and-filters.webp", alt: "Турнирные сетки с поиском и фильтрами по категориям", caption: "Просмотр турнирных сеток и поиск нужной категории. Реализовывал интерфейс фильтрации и связанные состояния.", width: 1280, height: 635 }] }, { title: "Публичные страницы", text: "Разработал лендинг, каталог и страницы турниров, включая правила. Адаптировал интерфейсы для компьютеров и мобильных устройств по макетам дизайнера.", media: [{ type: "image", src: "/projects/tournament-platform/landing.webp", alt: "Первый экран публичной части платформы турниров", caption: "Публичная часть платформы. Разработал адаптивный лендинг по макетам дизайнера.", width: 1280, height: 635 }, { type: "image", src: "/projects/tournament-platform/tournament-rules.webp", alt: "Страница правил турнира с навигацией по категориям", caption: "Правила турнира с навигацией по разделам и категориям. Реализовывал клиентский интерфейс страницы.", width: 1280, height: 635 }] }], frontend: [{ title: "Общие компоненты и разделение логики", text: "Создал и поддерживал набор из 20+ переиспользуемых UI-компонентов. Разделял компоненты отображения и компоненты с логикой работы с данными и пользовательскими действиями; этот подход использовал при добавлении новых экранов и поддержке существующих." }, { title: "Работа с данными", text: "Подключал интерфейсы к REST API, типизировал данные и props компонентов. Для асинхронных данных API использовал Vue Query, для клиентского состояния — Pinia." }, { title: "Выбор технологий и поиск решений", text: "Предложил стек для клиентской части, включая Nuxt. Перед новыми задачами искал и тестировал решения для галереи, Markdown и используемых библиотек, выбирая вариант, который встраивался в текущую архитектуру." }], results: [{ title: "Для продукта", text: "Через платформу провели два турнира полного цикла: регистрацию участников, судейство и публикацию результатов. Во время этих мероприятий платформа работала стабильно. Это результат работы команды; мой вклад — публичные страницы, интерфейсы судейства, общие UI-компоненты и интеграция клиентской части с API." }, { title: "Личные итоги", text: "Получил около года коммерческой работы в команде заказчика. Самостоятельно реализовывал frontend-задачи, добавлял новые экраны и поддерживал большую кодовую базу и общие компоненты по мере развития продукта." }] }, result: "", demo: "https://agonx.ru/", unavailable: { repo: "Исходный код коммерческого проекта не публикуется." }, cover: { tone: "tournament", label: "TOURNAMENT SYSTEM", headline: "Организация.\nСудейство.\nРезультаты.", technology: "Vue / Nuxt", icon: "layers", symbol: "[ ]" }, media: [], examples: [], timeline: { suffix: "ВКР", text: "Панель судейства, публичные страницы, UI-компоненты и интеграция с backend. Работа в команде заказчика." },
+    slug: "tournament-platform",
+    title: "B2B-платформа турниров",
+    shortTitle: "Турниры",
+    kind: { label: "Коммерческий проект" },
+    year: "2025 — 2026",
+    summary:
+      "Платформа для организации турниров: от регистрации участников до судейства и публикации результатов.",
+    description:
+      "Платформа для организации турниров по единоборствам — от регистрации участников до судейства и публикации результатов. Около года работал над клиентской частью в команде заказчика; проект также стал моей выпускной квалификационной работой.",
+    heroNote: "Платформа использовалась для проведения двух турниров полного цикла.",
+    role: "Frontend-разработчик · команда: дизайнер интерфейса, backend- и full-stack-разработчики",
+    stack: ["Vue 3", "Nuxt", "TypeScript", "Tailwind CSS", "Vue Query", "Pinia", "REST API"],
+    tasks: [],
+    decisions: [],
+    caseStudy: {
+      task: [
+        "Заказчику — организатору турниров по бразильскому джиу-джитсу и грэпплингу — требовалась единая система для подготовки и проведения соревнований. Вместо отдельных форм регистрации, таблиц, бумажных протоколов и чатов команда объединила регистрацию участников, управление категориями и турнирными сетками, судейство и публикацию результатов.",
+        "Отвечал за основную часть вёрстки: основные экраны, правки и разработку новых интерфейсных фич — галерею, автоподстановку и другие детали. Работал с дизайнером, backend- и full-stack-разработчиками. Критически важным сценарием была работа в день турнира: управление очередью схваток, счётом и таймером, а также синхронизация судейской панели со зрительским табло.",
+      ],
+      contributions: [
+        {
+          title: "Интерфейсы судейства",
+          text: "Разрабатывал клиентские экраны для ведения схватки: отображение счёта и таймера, элементы управления и действия по результату. Реализовывал адаптивную вёрстку и UI-компоненты этих экранов.",
+          media: [
+            {
+              type: "image",
+              src: "/projects/tournament-platform/judge-panel.webp",
+              alt: "Панель судейства с таймером и управлением счётом схватки",
+              caption:
+                "Рабочее место судьи: счёт, таймер и действия по результату схватки. Мой вклад — адаптивная вёрстка и клиентские UI-компоненты.",
+              width: 1280,
+              height: 662,
+            },
+          ],
+        },
+        {
+          title: "Турнирные сетки и фильтрация",
+          text: "Реализовывал интерфейсы просмотра сеток, поиск и фильтры по категориям. Работал над связанными состояниями интерфейса и пользовательскими действиями.",
+          media: [
+            {
+              type: "image",
+              src: "/projects/tournament-platform/brackets-and-filters.webp",
+              alt: "Турнирные сетки с поиском и фильтрами по категориям",
+              caption:
+                "Просмотр турнирных сеток и поиск нужной категории. Реализовывал интерфейс фильтрации и связанные состояния.",
+              width: 1280,
+              height: 635,
+            },
+          ],
+        },
+        {
+          title: "Публичные страницы",
+          text: "Разработал лендинг, каталог и страницы турниров, включая правила. Адаптировал интерфейсы для компьютеров и мобильных устройств по макетам дизайнера.",
+          media: [
+            {
+              type: "image",
+              src: "/projects/tournament-platform/landing.webp",
+              alt: "Первый экран публичной части платформы турниров",
+              caption:
+                "Публичная часть платформы. Разработал адаптивный лендинг по макетам дизайнера.",
+              width: 1280,
+              height: 635,
+            },
+            {
+              type: "image",
+              src: "/projects/tournament-platform/tournament-rules.webp",
+              alt: "Страница правил турнира с навигацией по категориям",
+              caption:
+                "Правила турнира с навигацией по разделам и категориям. Реализовывал клиентский интерфейс страницы.",
+              width: 1280,
+              height: 635,
+            },
+          ],
+        },
+      ],
+      frontend: [
+        {
+          title: "Общие компоненты и разделение логики",
+          text: "Создал и поддерживал набор из 20+ переиспользуемых UI-компонентов. Разделял компоненты отображения и компоненты с логикой работы с данными и пользовательскими действиями; этот подход использовал при добавлении новых экранов и поддержке существующих.",
+        },
+        {
+          title: "Работа с данными",
+          text: "Подключал интерфейсы к REST API, типизировал данные и props компонентов. Для асинхронных данных API использовал Vue Query, для клиентского состояния — Pinia.",
+        },
+        {
+          title: "Выбор технологий и поиск решений",
+          text: "Предложил стек для клиентской части, включая Nuxt. Перед новыми задачами искал и тестировал решения для галереи, Markdown и используемых библиотек, выбирая вариант, который встраивался в текущую архитектуру.",
+        },
+      ],
+      results: [
+        {
+          title: "Для продукта",
+          text: "Через платформу провели два турнира полного цикла: регистрацию участников, судейство и публикацию результатов. Во время этих мероприятий платформа работала стабильно. Это результат работы команды; мой вклад — публичные страницы, интерфейсы судейства, общие UI-компоненты и интеграция клиентской части с API.",
+        },
+        {
+          title: "Личные итоги",
+          text: "Получил около года коммерческой работы в команде заказчика. Самостоятельно реализовывал frontend-задачи, добавлял новые экраны и поддерживал большую кодовую базу и общие компоненты по мере развития продукта.",
+        },
+      ],
+    },
+    result: "",
+    demo: "https://agonx.ru/",
+    unavailable: { repo: "Исходный код коммерческого проекта не публикуется." },
+    cover: {
+      tone: "tournament",
+      label: "TOURNAMENT SYSTEM",
+      headline: "Организация.\nСудейство.\nРезультаты.",
+      technology: "Vue / Nuxt",
+      icon: "layers",
+      symbol: "[ ]",
+    },
+    media: [],
+    examples: [],
+    timeline: {
+      suffix: "ВКР",
+      text: "Панель судейства, публичные страницы, UI-компоненты и интеграция с backend. Работа в команде заказчика.",
+    },
   },
   {
-    slug: "student-profile", title: "Цифровой профиль студента", shortTitle: "Цифровой профиль", kind: { label: "Внутренний проект ДГТУ" }, year: "2025", summary: "Карьерная платформа для студентов и работодателей: стажировки, профили кандидатов и навыки.", description: "Карьерная платформа ДГТУ для студентов и работодателей. Самостоятельно спроектировал интерфейс и разработал клиентскую часть совместно с backend-разработчиком.", role: "Frontend-разработчик · UI/UX", stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Recharts"], context: ["Платформа помогает студентам представить навыки и проекты, найти стажировку, а работодателям — познакомиться с кандидатами. Сценарии сервисов поиска работы были адаптированы под задачи университета.", "Дизайн и клиентскую часть разработал самостоятельно: сравнивал «Твой Ход» и FUT, выбирал подходящие решения и адаптировал их под задачи проекта. В проекте начал работать с Next.js и активно использовать shadcn/ui."], tasks: [{ title: "Самостоятельное проектирование UI/UX", text: "Сравнил интерфейсы сервисов «Твой Ход» и FUT, выбрал подходящие паттерны и спроектировал интерфейс университетской платформы." }, { title: "Ключевые пользовательские сценарии", text: "Разработал каталог стажировок, страницу компании, каталог кандидатов и профиль студента с навыками, резюме и проектами." }, { title: "Компоненты и фильтры", text: "Создал карточки, интерфейсы фильтрации, постраничный вывод и переходы на подробные страницы. Адаптировал shadcn/ui под собственный дизайн и вынес повторяющиеся блоки в общие компоненты." }, { title: "Мобильная версия", text: "Адаптировал каталог стажировок и нижнюю навигацию для мобильных экранов." }], decisions: [{ title: "Компоненты из конфигурации", text: "Группы фильтров формируются из конфигурации: один набор компонентов отображает разные критерии для каталога стажировок и каталога кандидатов." }, { title: "Диаграммы навыков", text: "В профиле студента добавил диаграммы навыков на Recharts и собственный рендер длинных подписей в SVG." }, { title: "Пагинация через URL", text: "Номер страницы каталога стажировок сохраняется в адресной строке. После перезагрузки пользователь остаётся на выбранной странице, а ссылку на неё можно передать." }, { title: "Итерация каталога", text: "После первой версии подготовил редизайн каталога: вынес поиск в отдельный блок, собрал фильтры в панель и переработал карточки. Этот вариант остался на стадии макета." }], demo: "https://practikv1.vercel.app/", demoNote: "Публичная версия показывает интерактивный интерфейс на демонстрационных данных. Для дальнейшего развития планировались автоматическое формирование резюме, анализ навыков и более удобный поиск кандидатов и стажировок.", mediaIntro: "Сначала показаны реализованные сценарии публичной версии. Последняя пара — первоначальный интерфейс каталога и нереализованный макет его редизайна, восстановленные по исходным снимкам.", result: "Разработан интерактивный прототип клиентской части с основными страницами, компонентами и навигацией. Дальнейшая разработка остановилась после подготовки обновлённого макета каталога.", repo: "https://github.com/DenissioBarkani/student-dep", repoNote: "Публичный репозиторий подтверждает примеры клиентского кода. Демонстрационные данные и отдельные сценарии поиска не отражают полноценную production-интеграцию.", cover: { tone: "student", label: "STUDENT PROFILE", headline: "Студенты\nи компании.", technology: "React / Next.js", icon: "component", symbol: "{ }" }, media: [{ type: "image", src: "/projects/student-profile/internships-catalog.webp", alt: "Каталог стажировок с фильтрами и карточками предложений", caption: "Каталог стажировок: фильтры, карточки предложений и сценарий поиска позиции.", width: 1280, height: 635 }, { type: "image", src: "/projects/student-profile/candidates-catalog.webp", alt: "Каталог студентов с фильтрами и карточками кандидатов", caption: "Каталог кандидатов: сценарий работодателя для поиска студентов.", width: 1280, height: 635 }, { type: "image", src: "/projects/student-profile/student-profile.webp", alt: "Профиль студента с диаграммой навыков, резюме и проектами", caption: "Профиль студента: навыки на Recharts, резюме и проекты кандидата.", width: 1280, height: 635 }, { type: "image", src: "/projects/student-profile/internships-catalog-initial.webp", alt: "Первоначальный интерфейс каталога стажировок", caption: "Первая реализованная версия каталога стажировок.", width: 1660, height: 948 }, { type: "image", src: "/projects/student-profile/internships-catalog-redesign.webp", alt: "Макет обновлённого каталога стажировок", caption: "Нереализованный макет редизайна каталога: отдельный поиск, панель фильтров и обновлённые карточки.", width: 1662, height: 946 }], examples: sourceExamples["DenissioBarkani/student-profile-portfolio"].files, codeSection: { title: "Исходный код", intro: "Публичные фрагменты из student-dep: конфигурация фильтров, подписи диаграммы навыков и активное состояние мобильной навигации." }, timeline: { text: "Самостоятельный UI/UX и клиентская часть на Next.js. Совместная работа с backend-разработчиком." },
+    slug: "student-profile",
+    title: "Цифровой профиль студента",
+    shortTitle: "Цифровой профиль",
+    kind: { label: "Внутренний проект ДГТУ" },
+    year: "2025",
+    summary:
+      "Карьерная платформа для студентов и работодателей: стажировки, профили кандидатов и навыки.",
+    description:
+      "Карьерная платформа ДГТУ для студентов и работодателей. Самостоятельно спроектировал интерфейс и разработал клиентскую часть совместно с backend-разработчиком.",
+    role: "Frontend-разработчик · UI/UX",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Recharts"],
+    context: [
+      "Платформа помогает студентам представить навыки и проекты, найти стажировку, а работодателям — познакомиться с кандидатами. Сценарии сервисов поиска работы были адаптированы под задачи университета.",
+      "Дизайн и клиентскую часть разработал самостоятельно: сравнивал «Твой Ход» и FUT, выбирал подходящие решения и адаптировал их под задачи проекта. В проекте начал работать с Next.js и активно использовать shadcn/ui.",
+    ],
+    tasks: [
+      {
+        title: "Самостоятельное проектирование UI/UX",
+        text: "Сравнил интерфейсы сервисов «Твой Ход» и FUT, выбрал подходящие паттерны и спроектировал интерфейс университетской платформы.",
+      },
+      {
+        title: "Ключевые пользовательские сценарии",
+        text: "Разработал каталог стажировок, страницу компании, каталог кандидатов и профиль студента с навыками, резюме и проектами.",
+      },
+      {
+        title: "Компоненты и фильтры",
+        text: "Создал карточки, интерфейсы фильтрации, постраничный вывод и переходы на подробные страницы. Адаптировал shadcn/ui под собственный дизайн и вынес повторяющиеся блоки в общие компоненты.",
+      },
+      {
+        title: "Мобильная версия",
+        text: "Адаптировал каталог стажировок и нижнюю навигацию для мобильных экранов.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Компоненты из конфигурации",
+        text: "Группы фильтров формируются из конфигурации: один набор компонентов отображает разные критерии для каталога стажировок и каталога кандидатов.",
+      },
+      {
+        title: "Диаграммы навыков",
+        text: "В профиле студента добавил диаграммы навыков на Recharts и собственный рендер длинных подписей в SVG.",
+      },
+      {
+        title: "Пагинация через URL",
+        text: "Номер страницы каталога стажировок сохраняется в адресной строке. После перезагрузки пользователь остаётся на выбранной странице, а ссылку на неё можно передать.",
+      },
+      {
+        title: "Итерация каталога",
+        text: "После первой версии подготовил редизайн каталога: вынес поиск в отдельный блок, собрал фильтры в панель и переработал карточки. Этот вариант остался на стадии макета.",
+      },
+    ],
+    demo: "https://practikv1.vercel.app/",
+    demoNote:
+      "Публичная версия показывает интерактивный интерфейс на демонстрационных данных. Для дальнейшего развития планировались автоматическое формирование резюме, анализ навыков и более удобный поиск кандидатов и стажировок.",
+    mediaIntro:
+      "Сначала показаны реализованные сценарии публичной версии. Последняя пара — первоначальный интерфейс каталога и нереализованный макет его редизайна, восстановленные по исходным снимкам.",
+    result:
+      "Разработан интерактивный прототип клиентской части с основными страницами, компонентами и навигацией. Дальнейшая разработка остановилась после подготовки обновлённого макета каталога.",
+    repo: "https://github.com/DenissioBarkani/student-dep",
+    repoNote:
+      "Публичный репозиторий подтверждает примеры клиентского кода. Демонстрационные данные и отдельные сценарии поиска не отражают полноценную production-интеграцию.",
+    cover: {
+      tone: "student",
+      label: "STUDENT PROFILE",
+      headline: "Студенты\nи компании.",
+      technology: "React / Next.js",
+      icon: "component",
+      symbol: "{ }",
+    },
+    media: [
+      {
+        type: "image",
+        src: "/projects/student-profile/internships-catalog.webp",
+        alt: "Каталог стажировок с фильтрами и карточками предложений",
+        caption: "Каталог стажировок: фильтры, карточки предложений и сценарий поиска позиции.",
+        width: 1280,
+        height: 635,
+      },
+      {
+        type: "image",
+        src: "/projects/student-profile/candidates-catalog.webp",
+        alt: "Каталог студентов с фильтрами и карточками кандидатов",
+        caption: "Каталог кандидатов: сценарий работодателя для поиска студентов.",
+        width: 1280,
+        height: 635,
+      },
+      {
+        type: "image",
+        src: "/projects/student-profile/student-profile.webp",
+        alt: "Профиль студента с диаграммой навыков, резюме и проектами",
+        caption: "Профиль студента: навыки на Recharts, резюме и проекты кандидата.",
+        width: 1280,
+        height: 635,
+      },
+      {
+        type: "image",
+        src: "/projects/student-profile/internships-catalog-initial.webp",
+        alt: "Первоначальный интерфейс каталога стажировок",
+        caption: "Первая реализованная версия каталога стажировок.",
+        width: 1660,
+        height: 948,
+      },
+      {
+        type: "image",
+        src: "/projects/student-profile/internships-catalog-redesign.webp",
+        alt: "Макет обновлённого каталога стажировок",
+        caption:
+          "Нереализованный макет редизайна каталога: отдельный поиск, панель фильтров и обновлённые карточки.",
+        width: 1662,
+        height: 946,
+      },
+    ],
+    examples: sourceExamples["DenissioBarkani/student-profile-portfolio"].files,
+    codeSection: {
+      title: "Исходный код",
+      intro:
+        "Публичные фрагменты из student-dep: конфигурация фильтров, подписи диаграммы навыков и активное состояние мобильной навигации.",
+    },
+    timeline: {
+      text: "Самостоятельный UI/UX и клиентская часть на Next.js. Совместная работа с backend-разработчиком.",
+    },
   },
   {
-    slug: "center-invest", title: "Боты под управлением", shortTitle: "Центр-инвест", kind: { label: "Практика", detail: "Центр-инвест" }, year: "Лето 2025", summary: "SPA для управления HR Telegram-ботами: анкеты, ответы кандидатов и состояния интерфейса.", description: "Frontend-интерфейс для управления HR Telegram-ботами: от авторизации и списка ботов до настройки анкет и просмотра ответов кандидатов.", role: "Frontend-разработчик · практика", stack: ["React", "TypeScript", "MUI", "Zustand", "React Hook Form", "Zod", "Axios", "React Virtuoso", "REST API"], context: ["Во время летней практики 2025 года в банке «Центр-инвест» я работал над frontend-интерфейсом для управления HR Telegram-ботами. За три недели спланировал клиентскую часть: определил стек, реализовал основные пользовательские сценарии и подготовил интеграцию с API, пока backend-разработчик делал свою часть системы.", "Наставники помогали через code review: подсказывали, как оформлять запросы, указывали на ошибки в асинхронной логике и помогали улучшать интерфейсные решения. В проекте я впервые плотно поработал с MUI и компонентным подходом к внутренним сервисам."], tasks: [{ title: "Авторизация и защищённые маршруты", text: "Сделал экран входа, хранилище состояния авторизации на Zustand и защиту маршрутов: панель и страницы ботов доступны только после входа." }, { title: "Управление ботами", text: "Реализовал список ботов со статусами и счётчиками новых сообщений. Добавил создание, просмотр, редактирование и удаление бота с подтверждением действия." }, { title: "Формы и валидация", text: "Собрал формы на React Hook Form и добавил проверки через Zod. Пользователь видит ошибки ввода, а действия недоступны, пока обязательные поля не заполнены корректно." }, { title: "Настройка сценария бота", text: "Реализовал создание вопросов для анкеты, добавление вариантов ответов и удаление вопросов из сценария Telegram-бота." }, { title: "Ответы пользователей", text: "Добавил отдельную вкладку со статистикой ответов кандидатов и раскрывающимися карточками для просмотра деталей." }, { title: "API-слой и обработка запросов", text: "Вынес HTTP-логику из компонентов в отдельный API-слой на Axios. Axios Interceptors помогли централизованно настроить заголовки, обработку ошибок и единый формат сообщений для интерфейса." }, { title: "Работа с большим списком", text: "Использовал React Virtuoso для виртуализированной таблицы ботов, чтобы список оставался быстрым при увеличении числа записей." }], decisions: [{ title: "Формы и валидация", text: "React Hook Form управляет состоянием форм без лишних перерисовок, а Zod проверяет email, пароль и обязательные поля. Кнопки действий недоступны, пока форма не заполнена корректно." }, { title: "Компонентный интерфейс на MUI", text: "Material UI использовал для таблиц, форм, диалогов подтверждения, вкладок, уведомлений и адаптивной структуры панели. Это позволило быстрее собрать единый интерфейс." }, { title: "Состояние и навигация", text: "Zustand хранит состояние авторизации. React Router разделяет публичный экран входа и защищённую часть панели, а активная вкладка карточки бота сохраняется в URL." }, { title: "Работа с асинхронными запросами", text: "В процессе практики получил ревью от менторов по API-запросам и асинхронным операциям. Исправлял ошибки в состояниях загрузки и обработке ответов сервера." }, { title: "Состояния интерфейса", text: "В приложении предусмотрены индикаторы загрузки, пустые состояния, уведомления об успешных действиях и ошибках, а также подтверждение удаления." }], demo: "https://center-invest-hr-telegram-bot.vercel.app/", demoNote: "Публичная версия адаптирована для портфолио: вместо внутреннего backend API используются обезличенные демо-данные. Все действия работают в браузере и сохраняются в localStorage: вход, создание, редактирование и удаление ботов, создание и удаление вопросов, просмотр ответов пользователей. Так можно показать пользовательские сценарии без доступа к внутренней инфраструктуре банка.", mediaIntro: "Скриншоты показывают последовательность работы: список ботов, создание нового бота, настройку анкеты и просмотр ответов кандидатов.", result: "За время практики получил опыт разработки внутреннего React-приложения: от выбора технологий и построения форм до интеграции с API, обработки асинхронных запросов и проектирования состояний интерфейса.", repo: "https://github.com/DenissioBarkani/Center-invest-hr-telegram", repoNote: "Публичный fork Center-invest-IT/hr-telegram-bot-admin. Описание личного вклада составлено по материалам практики; в демо не используются реальные данные банка или кандидатов.", cover: { tone: "bank", label: "CENTER-INVEST", headline: "Управление\nTelegram-ботами.", technology: "React / TypeScript", icon: "braces", symbol: "/ /" }, media: [{ type: "image", src: "/projects/center-invest/bots-overview.webp", alt: "Список HR Telegram-ботов со статусами и количеством новых сообщений", caption: "Обзор ботов: статусы, счётчики новых сообщений и переход к управлению.", width: 1440, height: 1000 }, { type: "image", src: "/projects/center-invest/create-bot.webp", alt: "Форма создания нового HR Telegram-бота", caption: "Создание бота с проверкой обязательных полей.", width: 1440, height: 1000 }, { type: "image", src: "/projects/center-invest/questionnaire.webp", alt: "Настройка вопросов и вариантов ответов в анкете Telegram-бота", caption: "Настройка сценария анкеты: вопросы и варианты ответов.", width: 1440, height: 1200 }, { type: "image", src: "/projects/center-invest/candidate-responses.webp", alt: "Вкладка с ответами кандидатов и статистикой по анкете", caption: "Ответы кандидатов: статистика и подробности по каждому пользователю.", width: 1440, height: 1000 }], examples: [], timeline: { text: "SPA для управления Telegram-ботами: формы, таблицы, API и состояния интерфейса." },
+    slug: "center-invest",
+    title: "Боты под управлением",
+    shortTitle: "Центр-инвест",
+    kind: { label: "Практика", detail: "Центр-инвест" },
+    year: "Лето 2025",
+    summary:
+      "SPA для управления HR Telegram-ботами: анкеты, ответы кандидатов и состояния интерфейса.",
+    description:
+      "Frontend-интерфейс для управления HR Telegram-ботами: от авторизации и списка ботов до настройки анкет и просмотра ответов кандидатов.",
+    role: "Frontend-разработчик · практика",
+    stack: [
+      "React",
+      "TypeScript",
+      "MUI",
+      "Zustand",
+      "React Hook Form",
+      "Zod",
+      "Axios",
+      "React Virtuoso",
+      "REST API",
+    ],
+    context: [
+      "Во время летней практики 2025 года в банке «Центр-инвест» я работал над frontend-интерфейсом для управления HR Telegram-ботами. За три недели спланировал клиентскую часть: определил стек, реализовал основные пользовательские сценарии и подготовил интеграцию с API, пока backend-разработчик делал свою часть системы.",
+      "Наставники помогали через code review: подсказывали, как оформлять запросы, указывали на ошибки в асинхронной логике и помогали улучшать интерфейсные решения. В проекте я впервые плотно поработал с MUI и компонентным подходом к внутренним сервисам.",
+    ],
+    tasks: [
+      {
+        title: "Авторизация и защищённые маршруты",
+        text: "Сделал экран входа, хранилище состояния авторизации на Zustand и защиту маршрутов: панель и страницы ботов доступны только после входа.",
+      },
+      {
+        title: "Управление ботами",
+        text: "Реализовал список ботов со статусами и счётчиками новых сообщений. Добавил создание, просмотр, редактирование и удаление бота с подтверждением действия.",
+      },
+      {
+        title: "Формы и валидация",
+        text: "Собрал формы на React Hook Form и добавил проверки через Zod. Пользователь видит ошибки ввода, а действия недоступны, пока обязательные поля не заполнены корректно.",
+      },
+      {
+        title: "Настройка сценария бота",
+        text: "Реализовал создание вопросов для анкеты, добавление вариантов ответов и удаление вопросов из сценария Telegram-бота.",
+      },
+      {
+        title: "Ответы пользователей",
+        text: "Добавил отдельную вкладку со статистикой ответов кандидатов и раскрывающимися карточками для просмотра деталей.",
+      },
+      {
+        title: "API-слой и обработка запросов",
+        text: "Вынес HTTP-логику из компонентов в отдельный API-слой на Axios. Axios Interceptors помогли централизованно настроить заголовки, обработку ошибок и единый формат сообщений для интерфейса.",
+      },
+      {
+        title: "Работа с большим списком",
+        text: "Использовал React Virtuoso для виртуализированной таблицы ботов, чтобы список оставался быстрым при увеличении числа записей.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Формы и валидация",
+        text: "React Hook Form управляет состоянием форм без лишних перерисовок, а Zod проверяет email, пароль и обязательные поля. Кнопки действий недоступны, пока форма не заполнена корректно.",
+      },
+      {
+        title: "Компонентный интерфейс на MUI",
+        text: "Material UI использовал для таблиц, форм, диалогов подтверждения, вкладок, уведомлений и адаптивной структуры панели. Это позволило быстрее собрать единый интерфейс.",
+      },
+      {
+        title: "Состояние и навигация",
+        text: "Zustand хранит состояние авторизации. React Router разделяет публичный экран входа и защищённую часть панели, а активная вкладка карточки бота сохраняется в URL.",
+      },
+      {
+        title: "Работа с асинхронными запросами",
+        text: "В процессе практики получил ревью от менторов по API-запросам и асинхронным операциям. Исправлял ошибки в состояниях загрузки и обработке ответов сервера.",
+      },
+      {
+        title: "Состояния интерфейса",
+        text: "В приложении предусмотрены индикаторы загрузки, пустые состояния, уведомления об успешных действиях и ошибках, а также подтверждение удаления.",
+      },
+    ],
+    demo: "https://center-invest-hr-telegram-bot.vercel.app/",
+    demoNote:
+      "Публичная версия адаптирована для портфолио: вместо внутреннего backend API используются обезличенные демо-данные. Все действия работают в браузере и сохраняются в localStorage: вход, создание, редактирование и удаление ботов, создание и удаление вопросов, просмотр ответов пользователей. Так можно показать пользовательские сценарии без доступа к внутренней инфраструктуре банка.",
+    mediaIntro:
+      "Скриншоты показывают последовательность работы: список ботов, создание нового бота, настройку анкеты и просмотр ответов кандидатов.",
+    result:
+      "За время практики получил опыт разработки внутреннего React-приложения: от выбора технологий и построения форм до интеграции с API, обработки асинхронных запросов и проектирования состояний интерфейса.",
+    repo: "https://github.com/DenissioBarkani/Center-invest-hr-telegram",
+    repoNote:
+      "Публичный fork Center-invest-IT/hr-telegram-bot-admin. Описание личного вклада составлено по материалам практики; в демо не используются реальные данные банка или кандидатов.",
+    cover: {
+      tone: "bank",
+      label: "CENTER-INVEST",
+      headline: "Управление\nTelegram-ботами.",
+      technology: "React / TypeScript",
+      icon: "braces",
+      symbol: "/ /",
+    },
+    media: [
+      {
+        type: "image",
+        src: "/projects/center-invest/bots-overview.webp",
+        alt: "Список HR Telegram-ботов со статусами и количеством новых сообщений",
+        caption: "Обзор ботов: статусы, счётчики новых сообщений и переход к управлению.",
+        width: 1440,
+        height: 1000,
+      },
+      {
+        type: "image",
+        src: "/projects/center-invest/create-bot.webp",
+        alt: "Форма создания нового HR Telegram-бота",
+        caption: "Создание бота с проверкой обязательных полей.",
+        width: 1440,
+        height: 1000,
+      },
+      {
+        type: "image",
+        src: "/projects/center-invest/questionnaire.webp",
+        alt: "Настройка вопросов и вариантов ответов в анкете Telegram-бота",
+        caption: "Настройка сценария анкеты: вопросы и варианты ответов.",
+        width: 1440,
+        height: 1200,
+      },
+      {
+        type: "image",
+        src: "/projects/center-invest/candidate-responses.webp",
+        alt: "Вкладка с ответами кандидатов и статистикой по анкете",
+        caption: "Ответы кандидатов: статистика и подробности по каждому пользователю.",
+        width: 1440,
+        height: 1000,
+      },
+    ],
+    examples: [],
+    timeline: {
+      text: "SPA для управления Telegram-ботами: формы, таблицы, API и состояния интерфейса.",
+    },
   },
   {
-    slug: "ai-artdir", title: "AI-Artdir", shortTitle: "AI-Artdir", kind: { label: "Личный проект", detail: "юмористическая вёрстка" }, year: "2021", summary: "Юмористический лендинг о согласовании дизайна, свёрстанный по макету заказчика.", description: "Личный проект с лёгкой сатирой о сервисе, который принимает на себя бесконечные правки и согласования макетов. Дизайн-концепция и макет были предоставлены заказчиком.", role: "Вёрстка и JavaScript", stack: ["HTML", "Sass", "JavaScript", "jQuery", "Gulp"], context: ["AI-Artdir — личный проект с лёгкой сатирой на процесс согласования дизайна: заказчик отправляет макет, сервис обещает принять ответственность, а команда наконец может смотреть на финальную версию.", "Дизайн-концепция, визуальные решения и Figma-макет были предоставлены заказчиком. Моя задача состояла в точной вёрстке, адаптации интерфейса и реализации клиентских взаимодействий."], tasks: [{ title: "Точная вёрстка по макету", text: "Сверстал лендинг по Figma. Дизайн, визуальная концепция и макет предоставил заказчик; я точно перенёс типографику, отступы и композицию блоков в браузер." }, { title: "Адаптивные состояния", text: "Настроил отдельное представление тарифов и контента для небольших экранов, чтобы страница сохраняла ритм и не превращалась в уменьшенную desktop-версию." }, { title: "Интерактивность лендинга", text: "Добавил плавную навигацию к разделам, модальные окна, слайдер тарифов и анимированные состояния элементов." }, { title: "Форма заявки", text: "Реализовал проверку обязательных полей и email, выбор файла и отображение его названия. В опубликованном демо отправка формы заменена клиентским состоянием успешной отправки." }], decisions: [{ title: "Тон из дизайн-концепции", text: "Сатира на согласование правок, тексты и визуальный ритм были заданы в концепции заказчика. В вёрстке я сохранил этот тон через структуру блоков и интерактивные состояния." }, { title: "Адаптивная подача тарифов", text: "На широком экране тарифы показаны сравнительной таблицей, а на небольшом — отдельными карточками. Содержание остаётся тем же, но форма подачи меняется под ширину экрана." }, { title: "Модальные окна без скачка страницы", text: "При открытии модального окна блокируется прокрутка фона, а ширина полосы прокрутки компенсируется, чтобы страница не смещалась." }, { title: "Сценарий формы", text: "Форма показывает понятные состояния ввода и выбранного файла. В публичной версии на GitHub Pages серверная отправка отключена, поэтому пользовательский сценарий демонстрируется локально в браузере." }], demo: sourceExamples["DenissioBarkani/Ai-artdir"].demoUrl, demoNote: "Публичная версия размещена на GitHub Pages. Она показывает клиентские взаимодействия и состояние успешной отправки, но не отправляет реальные заявки на сервер. В исходной версии проекта заявки отправлялись через AJAX и PHP.", mediaIntro: "Два кадра показывают разные стороны лендинга: первое знакомство с идеей и форму, через которую заказчик передаёт макет на согласование.", result: "Получился промо-лендинг по дизайн-концепции заказчика с точной адаптивной вёрсткой и рабочими клиентскими сценариями формы, навигации и тарифов.", repo: "https://github.com/DenissioBarkani/Ai-artdir", repoNote: "Исходники и демо опубликованы публично. Дизайн-концепция и макеты принадлежат заказчику; описание относится к моей вёрстке и клиентским взаимодействиям.", cover: { tone: "artdir", label: "AI-ARTDIR", headline: "Дизайн.\nВёрстка.\nДетали.", technology: "HTML / Sass / JS", icon: "pen-tool", symbol: "/ /" }, media: [{ type: "image", src: "/projects/ai-artdir/landing-intro.webp", alt: "Первый экран лендинга AI-Artdir с юмористическим предложением передать ответственность за согласование макета", caption: "Первый экран: юмористическая идея и основной призыв лендинга.", width: 1280, height: 612 }, { type: "image", src: "/projects/ai-artdir/brief-form.webp", alt: "Форма AI-Artdir для передачи макета с полями компании, должности, имени и почты", caption: "Форма заявки: данные заказчика и загрузка макета на согласование.", width: 1280, height: 608 }], examples: sourceExamples["DenissioBarkani/Ai-artdir"].files, codeSection: { eyebrow: "Реальные исходники", title: "Немного кода", intro: "Фрагменты из публичного репозитория: адаптация интерфейса, состояния формы и интерактивные элементы лендинга." },
+    slug: "ai-artdir",
+    title: "AI-Artdir",
+    shortTitle: "AI-Artdir",
+    kind: { label: "Личный проект", detail: "юмористическая вёрстка" },
+    year: "2021",
+    summary: "Юмористический лендинг о согласовании дизайна, свёрстанный по макету заказчика.",
+    description:
+      "Личный проект с лёгкой сатирой о сервисе, который принимает на себя бесконечные правки и согласования макетов. Дизайн-концепция и макет были предоставлены заказчиком.",
+    role: "Вёрстка и JavaScript",
+    stack: ["HTML", "Sass", "JavaScript", "jQuery", "Gulp"],
+    context: [
+      "AI-Artdir — личный проект с лёгкой сатирой на процесс согласования дизайна: заказчик отправляет макет, сервис обещает принять ответственность, а команда наконец может смотреть на финальную версию.",
+      "Дизайн-концепция, визуальные решения и Figma-макет были предоставлены заказчиком. Моя задача состояла в точной вёрстке, адаптации интерфейса и реализации клиентских взаимодействий.",
+    ],
+    tasks: [
+      {
+        title: "Точная вёрстка по макету",
+        text: "Сверстал лендинг по Figma. Дизайн, визуальная концепция и макет предоставил заказчик; я точно перенёс типографику, отступы и композицию блоков в браузер.",
+      },
+      {
+        title: "Адаптивные состояния",
+        text: "Настроил отдельное представление тарифов и контента для небольших экранов, чтобы страница сохраняла ритм и не превращалась в уменьшенную desktop-версию.",
+      },
+      {
+        title: "Интерактивность лендинга",
+        text: "Добавил плавную навигацию к разделам, модальные окна, слайдер тарифов и анимированные состояния элементов.",
+      },
+      {
+        title: "Форма заявки",
+        text: "Реализовал проверку обязательных полей и email, выбор файла и отображение его названия. В опубликованном демо отправка формы заменена клиентским состоянием успешной отправки.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Тон из дизайн-концепции",
+        text: "Сатира на согласование правок, тексты и визуальный ритм были заданы в концепции заказчика. В вёрстке я сохранил этот тон через структуру блоков и интерактивные состояния.",
+      },
+      {
+        title: "Адаптивная подача тарифов",
+        text: "На широком экране тарифы показаны сравнительной таблицей, а на небольшом — отдельными карточками. Содержание остаётся тем же, но форма подачи меняется под ширину экрана.",
+      },
+      {
+        title: "Модальные окна без скачка страницы",
+        text: "При открытии модального окна блокируется прокрутка фона, а ширина полосы прокрутки компенсируется, чтобы страница не смещалась.",
+      },
+      {
+        title: "Сценарий формы",
+        text: "Форма показывает понятные состояния ввода и выбранного файла. В публичной версии на GitHub Pages серверная отправка отключена, поэтому пользовательский сценарий демонстрируется локально в браузере.",
+      },
+    ],
+    demo: sourceExamples["DenissioBarkani/Ai-artdir"].demoUrl,
+    demoNote:
+      "Публичная версия размещена на GitHub Pages. Она показывает клиентские взаимодействия и состояние успешной отправки, но не отправляет реальные заявки на сервер. В исходной версии проекта заявки отправлялись через AJAX и PHP.",
+    mediaIntro:
+      "Два кадра показывают разные стороны лендинга: первое знакомство с идеей и форму, через которую заказчик передаёт макет на согласование.",
+    result:
+      "Получился промо-лендинг по дизайн-концепции заказчика с точной адаптивной вёрсткой и рабочими клиентскими сценариями формы, навигации и тарифов.",
+    repo: "https://github.com/DenissioBarkani/Ai-artdir",
+    repoNote:
+      "Исходники и демо опубликованы публично. Дизайн-концепция и макеты принадлежат заказчику; описание относится к моей вёрстке и клиентским взаимодействиям.",
+    cover: {
+      tone: "artdir",
+      label: "AI-ARTDIR",
+      headline: "Дизайн.\nВёрстка.\nДетали.",
+      technology: "HTML / Sass / JS",
+      icon: "pen-tool",
+      symbol: "/ /",
+    },
+    media: [
+      {
+        type: "image",
+        src: "/projects/ai-artdir/landing-intro.webp",
+        alt: "Первый экран лендинга AI-Artdir с юмористическим предложением передать ответственность за согласование макета",
+        caption: "Первый экран: юмористическая идея и основной призыв лендинга.",
+        width: 1280,
+        height: 612,
+      },
+      {
+        type: "image",
+        src: "/projects/ai-artdir/brief-form.webp",
+        alt: "Форма AI-Artdir для передачи макета с полями компании, должности, имени и почты",
+        caption: "Форма заявки: данные заказчика и загрузка макета на согласование.",
+        width: 1280,
+        height: 608,
+      },
+    ],
+    examples: sourceExamples["DenissioBarkani/Ai-artdir"].files,
+    codeSection: {
+      eyebrow: "Реальные исходники",
+      title: "Немного кода",
+      intro:
+        "Фрагменты из публичного репозитория: адаптация интерфейса, состояния формы и интерактивные элементы лендинга.",
+    },
   },
   {
-    slug: "vue-sneakers", title: "Vue Sneakers", shortTitle: "Vue Sneakers", kind: { label: "Учебный проект", detail: "по гайду" }, year: "Vue 3", summary: "Каталог кроссовок: компоненты Vue, поиск и корзина.", description: "Учебный проект, выполненный по гайду. Показывает практику работы с Vue: карточки товаров, корзина, поиск и взаимодействие с API.", role: "Учебная практика Vue", stack: ["Vue 3", "JavaScript", "Tailwind CSS", "Axios"], tasks: ["Работал с компонентами карточек и списком товаров.", "Реализовывал действия корзины.", "Работал с поиском и debounce.", "Использовал Axios для запросов к API."], decisions: [{ title: "Корзина", text: "Состояние корзины и связанные действия передаются компонентам через provide/inject." }, { title: "Поиск", text: "Debounce уменьшает количество обновлений при вводе строки поиска." }], result: "Учебное приложение с открытыми исходниками и доступным демо. Самостоятельные изменения относительно гайда отдельно не атрибутированы.", repo: "https://github.com/DenissioBarkani/vue-sneakers", demo: sourceExamples["DenissioBarkani/vue-sneakers"].demoUrl, cover: { tone: "sneakers", label: "VUE SNEAKERS", headline: "Практика\nна Vue.", technology: "Vue / Components", icon: "code", symbol: "/ /" }, media: [], examples: sourceExamples["DenissioBarkani/vue-sneakers"].files, codeSection: { eyebrow: "Реальные исходники", title: "Немного кода", intro: "Выбранные фрагменты из публичного репозитория. У каждого файла есть пояснение и ссылка на точную версию исходника." },
+    slug: "vue-sneakers",
+    title: "Vue Sneakers",
+    shortTitle: "Vue Sneakers",
+    kind: { label: "Учебный проект", detail: "по гайду" },
+    year: "Vue 3",
+    summary: "Каталог кроссовок: компоненты Vue, поиск и корзина.",
+    description:
+      "Учебный проект, выполненный по гайду. Показывает практику работы с Vue: карточки товаров, корзина, поиск и взаимодействие с API.",
+    role: "Учебная практика Vue",
+    stack: ["Vue 3", "JavaScript", "Tailwind CSS", "Axios"],
+    tasks: [
+      "Работал с компонентами карточек и списком товаров.",
+      "Реализовывал действия корзины.",
+      "Работал с поиском и debounce.",
+      "Использовал Axios для запросов к API.",
+    ],
+    decisions: [
+      {
+        title: "Корзина",
+        text: "Состояние корзины и связанные действия передаются компонентам через provide/inject.",
+      },
+      { title: "Поиск", text: "Debounce уменьшает количество обновлений при вводе строки поиска." },
+    ],
+    result:
+      "Учебное приложение с открытыми исходниками и доступным демо. Самостоятельные изменения относительно гайда отдельно не атрибутированы.",
+    repo: "https://github.com/DenissioBarkani/vue-sneakers",
+    demo: sourceExamples["DenissioBarkani/vue-sneakers"].demoUrl,
+    cover: {
+      tone: "sneakers",
+      label: "VUE SNEAKERS",
+      headline: "Практика\nна Vue.",
+      technology: "Vue / Components",
+      icon: "code",
+      symbol: "/ /",
+    },
+    media: [],
+    examples: sourceExamples["DenissioBarkani/vue-sneakers"].files,
+    codeSection: {
+      eyebrow: "Реальные исходники",
+      title: "Немного кода",
+      intro:
+        "Выбранные фрагменты из публичного репозитория. У каждого файла есть пояснение и ссылка на точную версию исходника.",
+    },
   },
 ] as const satisfies readonly Project[];
 
 const projectContentOverrides: Readonly<Record<string, Partial<Project>>> = {
   "student-profile": {
     summary: "Интерактивный прототип карьерной платформы: стажировки, профили кандидатов и навыки.",
-    description: "Интерактивный прототип карьерной платформы ДГТУ для студентов и работодателей. Я самостоятельно спроектировал интерфейс и разработал клиентскую часть; backend-разработчик отвечал за серверную часть.",
+    description:
+      "Интерактивный прототип карьерной платформы ДГТУ для студентов и работодателей. Я самостоятельно спроектировал интерфейс и разработал клиентскую часть; backend-разработчик отвечал за серверную часть.",
     role: "Frontend-разработчик и UI/UX-дизайнер",
-    result: "Разработан интерактивный прототип клиентской части: каталог стажировок и кандидатов, профиль студента, компоненты и навигация. После подготовки макета обновлённого каталога дальнейшая разработка остановилась.",
+    result:
+      "Разработан интерактивный прототип клиентской части: каталог стажировок и кандидатов, профиль студента, компоненты и навигация. После подготовки макета обновлённого каталога дальнейшая разработка остановилась.",
   },
   "center-invest": {
     title: "Панель управления HR Telegram-ботами",
     shortTitle: "HR Telegram-боты",
     cardHeadline: "Управление\nTelegram-ботами.",
-    summary: "Внутренний прототип панели для управления HR Telegram-ботами: анкеты и ответы кандидатов.",
-    description: "Внутренний прототип для практики в банке «Центр-инвест»: frontend-панель для настройки HR Telegram-ботов и просмотра ответов кандидатов. В рабочие процессы банка не внедрялся.",
+    summary:
+      "Внутренний прототип панели для управления HR Telegram-ботами: анкеты и ответы кандидатов.",
+    description:
+      "Внутренний прототип для практики в банке «Центр-инвест»: frontend-панель для настройки HR Telegram-ботов и просмотра ответов кандидатов. В рабочие процессы банка не внедрялся.",
     role: "Frontend-разработчик · практика в «Центр-инвест»",
     context: [
       "Во время летней практики 2025 года в банке «Центр-инвест» я разработал frontend внутреннего прототипа для управления HR Telegram-ботами. За три недели определил стек, реализовал основные пользовательские сценарии и подключил клиентскую часть к API, пока backend-разработчик делал серверную часть системы.",
       "Прототип подготовили в рамках практики и не внедряли в рабочие процессы банка. Наставники проводили code review: помогали улучшать запросы, асинхронную логику и интерфейсные решения.",
     ],
-    result: "Для практики создан внутренний прототип с авторизацией, управлением ботами, настройкой анкет и просмотром ответов кандидатов. В исходной версии клиентская часть была подключена к API; прототип не внедряли в рабочие процессы банка. Публичное демо воспроизводит эти сценарии на обезличенных данных в localStorage.",
+    result:
+      "Для практики создан внутренний прототип с авторизацией, управлением ботами, настройкой анкет и просмотром ответов кандидатов. В исходной версии клиентская часть была подключена к API; прототип не внедряли в рабочие процессы банка. Публичное демо воспроизводит эти сценарии на обезличенных данных в localStorage.",
   },
   "ai-artdir": {
     kind: { label: "Frontend-вёрстка", detail: "по макету заказчика" },
-    summary: "Промо-лендинг о согласовании дизайна: адаптивная вёрстка и JavaScript по макету заказчика.",
-    description: "Промо-лендинг с сатирой на согласование дизайн-правок. Дизайн-концепцию и Figma-макет предоставил заказчик; я выполнил frontend-вёрстку, адаптацию интерфейса и клиентские взаимодействия.",
+    summary:
+      "Промо-лендинг о согласовании дизайна: адаптивная вёрстка и JavaScript по макету заказчика.",
+    description:
+      "Промо-лендинг с сатирой на согласование дизайн-правок. Дизайн-концепцию и Figma-макет предоставил заказчик; я выполнил frontend-вёрстку, адаптацию интерфейса и клиентские взаимодействия.",
     role: "Frontend-вёрстка и JavaScript",
     context: [
       "AI-Artdir — промо-лендинг с сатирой на процесс согласования дизайна: пользователь передаёт макет, а сервис берёт на себя согласование правок.",
       "Дизайн-концепцию и Figma-макет предоставил заказчик. Моя задача — точно перенести макет в браузер, адаптировать интерфейс и реализовать клиентские взаимодействия.",
     ],
-    result: "Реализован адаптивный промо-лендинг по макету заказчика с навигацией, модальными окнами, тарифами и клиентским сценарием формы. Публичное демо работает в браузере, но не отправляет заявки на сервер.",
+    result:
+      "Реализован адаптивный промо-лендинг по макету заказчика с навигацией, модальными окнами, тарифами и клиентским сценарием формы. Публичное демо работает в браузере, но не отправляет заявки на сервер.",
   },
   "vue-sneakers": {
     summary: "Учебный каталог кроссовок по гайду: компоненты Vue, поиск, корзина и API-запросы.",
-    description: "Учебный проект, выполненный по гайду для практики Vue 3. В рамках гайда собрал каталог товаров, поиск, корзину и взаимодействие с API; самостоятельные изменения относительно исходного материала не выделяю.",
+    description:
+      "Учебный проект, выполненный по гайду для практики Vue 3. В рамках гайда собрал каталог товаров, поиск, корзину и взаимодействие с API; самостоятельные изменения относительно исходного материала не выделяю.",
     role: "Учебная практика Vue 3",
     tasks: [
       "Собрал компоненты карточек и списка товаров.",
@@ -184,7 +803,8 @@ const projectContentOverrides: Readonly<Record<string, Partial<Project>>> = {
       "Добавил поиск и debounce при вводе запроса.",
       "Подключил загрузку данных через Axios.",
     ],
-    result: "Работающее учебное демо с открытыми исходниками: каталог, поиск, корзина и загрузка данных. Проект выполнен по гайду; самостоятельные доработки относительно исходного материала не заявлены.",
+    result:
+      "Работающее учебное демо с открытыми исходниками: каталог, поиск, корзина и загрузка данных. Проект выполнен по гайду; самостоятельные доработки относительно исходного материала не заявлены.",
   },
 };
 
@@ -192,4 +812,3 @@ export const projects: readonly Project[] = projectSource.map((project) => ({
   ...project,
   ...projectContentOverrides[project.slug],
 }));
-

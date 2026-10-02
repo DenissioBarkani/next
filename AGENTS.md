@@ -34,4 +34,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 7. Серверные компоненты используй по умолчанию. `"use client"` добавляй только для browser API, локального состояния, анимации или пользовательского действия.
 8. Сохраняй shadcn-подход: primitives находятся в `components/ui`; проверь импорты перед изменением или удалением компонента.
 9. Каталог проектов immutable. Для поиска проекта, static params, следующего проекта и sitemap используй `lib/projects.ts`, не изменяй данные при импорте.
-10. До передачи работы выполни `npm run lint`, `npx tsc --noEmit --incremental false`, `npm run test` и `npm run build`. После UI-изменений проверь `/`, `/more`, страницы проектов, ссылки, anchors, интерактивность и мобильный вид.
+10. Не форматируй код вручную: Prettier — единственный источник правил раскладки. Для всего проекта используй `npm run format`, для проверки без изменений — `npm run format:check`.
+11. До передачи работы выполни `npm run format:check`, `npm run lint`, `npx tsc --noEmit --incremental false`, `npm run test` и `npm run build`. После UI-изменений проверь `/`, `/more`, страницы проектов, ссылки, anchors, интерактивность и мобильный вид.

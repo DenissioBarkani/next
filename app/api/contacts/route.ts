@@ -1,7 +1,10 @@
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const NO_STORE_HEADERS = { "Cache-Control": "no-store, max-age=0", "X-Content-Type-Options": "nosniff" };
+const NO_STORE_HEADERS = {
+  "Cache-Control": "no-store, max-age=0",
+  "X-Content-Type-Options": "nosniff",
+};
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 8;
 const attempts = new Map<string, number[]>();
@@ -10,10 +13,12 @@ type CaptchaResponse = { readonly status?: string };
 
 export async function POST(request: Request) {
   const clientIp = getClientIp(request);
-  if (isRateLimited(clientIp)) return json({ error: "Слишком много попыток. Подождите минуту и попробуйте снова." }, 429);
+  if (isRateLimited(clientIp))
+    return json({ error: "Слишком много попыток. Подождите минуту и попробуйте снова." }, 429);
 
   const token = await getToken(request);
-  if (!token) return json({ error: "Не удалось получить токен проверки. Попробуйте ещё раз." }, 400);
+  if (!token)
+    return json({ error: "Не удалось получить токен проверки. Попробуйте ещё раз." }, 400);
 
   const config = getContactConfig();
   if (!config) return json({ error: "Сервис контактов временно недоступен." }, 503);
@@ -27,7 +32,13 @@ export async function POST(request: Request) {
 async function getToken(request: Request) {
   try {
     const body: unknown = await request.json();
-    if (typeof body !== "object" || body === null || !("token" in body) || typeof body.token !== "string") return null;
+    if (
+      typeof body !== "object" ||
+      body === null ||
+      !("token" in body) ||
+      typeof body.token !== "string"
+    )
+      return null;
     const token = body.token.trim();
     return token.length > 0 && token.length <= 4_096 ? token : null;
   } catch {
@@ -52,7 +63,7 @@ async function verifyCaptcha(token: string, secret: string, ip: string) {
       signal: AbortSignal.timeout(5_000),
     });
     if (!response.ok) return false;
-    const result = await response.json() as CaptchaResponse;
+    const result = (await response.json()) as CaptchaResponse;
     return result.status === "ok";
   } catch {
     return false;

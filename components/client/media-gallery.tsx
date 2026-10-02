@@ -2,10 +2,66 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn, withoutFinalPeriod } from "@/lib/utils";
 import type { ProjectMedia } from "@/content/projects";
 
-export function MediaGallery({ items, className }: { readonly items: readonly ProjectMedia[]; readonly className?: string }) {
-  return <div className={cn("media-grid", className)}>{items.map((item) => <figure className="media-item" key={item.src}>{item.type === "video" ? <video controls preload="metadata" poster={item.poster}><source src={item.src}/></video> : <Dialog><DialogTrigger asChild><button type="button" aria-label={`Увеличить: ${item.caption}`}><Image src={item.src} alt={item.alt} width={item.width} height={item.height} sizes="(max-width: 700px) calc(100vw - 40px), 50vw"/></button></DialogTrigger><DialogContent className="media-dialog" showCloseButton={false}><DialogTitle>{withoutFinalPeriod(item.caption)}</DialogTitle><DialogDescription className="sr-only">Изображение проекта в увеличенном размере.</DialogDescription><Image src={item.src} alt={item.alt} width={item.width} height={item.height} sizes="min(1100px, calc(100vw - 32px))"/><DialogClose asChild><Button variant="outline">Закрыть</Button></DialogClose></DialogContent></Dialog>}<figcaption>{withoutFinalPeriod(item.caption)}</figcaption></figure>)}</div>;
+export function MediaGallery({
+  items,
+  className,
+}: {
+  readonly items: readonly ProjectMedia[];
+  readonly className?: string;
+}) {
+  return (
+    <div className={cn("media-grid", className)}>
+      {items.map((item) => (
+        <figure className="media-item" key={item.src}>
+          {item.type === "video" ? (
+            <video controls preload="metadata" poster={item.poster}>
+              <source src={item.src} />
+            </video>
+          ) : (
+            <Dialog>
+              <DialogTrigger asChild>
+                <button type="button" aria-label={`Увеличить: ${item.caption}`}>
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    sizes="(max-width: 700px) calc(100vw - 40px), 50vw"
+                  />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="media-dialog" showCloseButton={false}>
+                <DialogTitle>{withoutFinalPeriod(item.caption)}</DialogTitle>
+                <DialogDescription className="sr-only">
+                  Изображение проекта в увеличенном размере.
+                </DialogDescription>
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  width={item.width}
+                  height={item.height}
+                  sizes="min(1100px, calc(100vw - 32px))"
+                />
+                <DialogClose asChild>
+                  <Button variant="outline">Закрыть</Button>
+                </DialogClose>
+              </DialogContent>
+            </Dialog>
+          )}
+          <figcaption>{withoutFinalPeriod(item.caption)}</figcaption>
+        </figure>
+      ))}
+    </div>
+  );
 }
