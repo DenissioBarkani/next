@@ -2,32 +2,31 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Ambient } from "@/components/client/ambient";
 import { AccentPeriod } from "@/components/site/accent-period";
+import { homePage } from "@/content/pages";
+import { site } from "@/content/site";
 import { withoutFinalPeriod } from "@/lib/utils";
-import type { homePage } from "@/content/pages";
-import type { SiteProfile } from "@/content/site";
 
-type HeroProps = { readonly data: typeof homePage.hero; readonly profile: SiteProfile };
-
-export function Hero({ data, profile }: HeroProps) {
+export function Hero() {
+  const { hero } = homePage;
   return (
     <section className="hero shell">
       <div className="hero-copy">
         <p className="eyebrow">
           <span className="small-square" />
-          {data.eyebrow}
+          {hero.eyebrow}
         </p>
         <h1>
-          {data.title}
+          {hero.title}
           <br />
-          <AccentPeriod text={data.titleLine} />
+          <AccentPeriod text={hero.titleLine} />
         </h1>
-        <p className="hero-intro">{withoutFinalPeriod(data.intro)}</p>
+        <p className="hero-intro">{withoutFinalPeriod(hero.intro)}</p>
         <div className="hero-actions">
           <Button asChild className="action primary">
-            <a href={data.workLink}>{data.workLabel}</a>
+            <a href={hero.workLink}>{hero.workLabel}</a>
           </Button>
           <Button asChild variant="outline" className="action secondary">
-            <a href={profile.resumeHref} download>
+            <a href={site.profile.resumeHref} download>
               <Download />
               Резюме
             </a>
@@ -35,7 +34,7 @@ export function Hero({ data, profile }: HeroProps) {
         </div>
         <p className="hero-status">
           <span aria-hidden="true" />
-          {data.status}
+          {hero.status}
         </p>
       </div>
       <Ambient />

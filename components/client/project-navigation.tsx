@@ -33,14 +33,35 @@ export function ProjectRelatedNavigation({ project }: ProjectNavigationProps) {
   const navigation = useProjectNavigation(project.slug);
   return (
     <div className="related-projects">
-      <Link href={navigation.returnHref} className="arrow-link arrow-link--back">
+      <Link
+        href={navigation.returnHref}
+        className="arrow-link arrow-link--back related-projects-back"
+      >
         <ArrowLeft size={17} aria-hidden="true" />
-        {navigation.returnLabel}
+        <span className="related-projects-label related-projects-label--desktop">
+          {navigation.returnLabel}
+        </span>
+        <span className="related-projects-label related-projects-label--mobile">К работам…</span>
       </Link>
       <div className="related-projects-actions">
-        {navigation.context === "home" && <ArrowLink href="/projects">Все проекты</ArrowLink>}
-        <ArrowLink href={projectHref(navigation.nextSlug, navigation.context)}>
-          Следующий проект
+        <ArrowLink
+          href="/projects"
+          className={
+            navigation.context === "home"
+              ? "related-projects-all"
+              : "related-projects-all related-projects-all--mobile-only"
+          }
+        >
+          Все проекты
+        </ArrowLink>
+        <ArrowLink
+          href={projectHref(navigation.nextSlug, navigation.context)}
+          className="related-projects-next"
+        >
+          <span className="related-projects-label related-projects-label--desktop">
+            Следующий проект
+          </span>
+          <span className="related-projects-label related-projects-label--mobile">Следующий</span>
         </ArrowLink>
       </div>
     </div>

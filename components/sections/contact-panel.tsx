@@ -4,25 +4,25 @@ import { TelegramIcon } from "@/components/site/telegram-icon";
 import { AccentPeriod } from "@/components/site/accent-period";
 import { ContactReveal } from "@/components/client/contact-reveal";
 import { EmailCopyLink } from "@/components/client/email-copy-link";
-import type { homePage } from "@/content/pages";
-import type { SiteProfile } from "@/content/site";
+import { homePage } from "@/content/pages";
+import { site } from "@/content/site";
 
-type ContactPanelProps = { readonly data: typeof homePage.contacts; readonly profile: SiteProfile };
-
-export function ContactPanel({ data, profile }: ContactPanelProps) {
-  const [firstTitleLine, secondTitleLine] = data.title.split("\n");
+export function ContactPanel() {
+  const { contacts } = homePage;
+  const { profile } = site;
+  const [firstTitleLine, secondTitleLine] = contacts.title.split("\n");
   return (
     <section id="contact" className="contact-section">
       <div className="shell contact-inner">
         <div>
-          <p className="eyebrow">{data.eyebrow}</p>
+          <p className="eyebrow">{contacts.eyebrow}</p>
           <h2>
             {firstTitleLine}
             <br />
             <AccentPeriod text={secondTitleLine} />
           </h2>
           <p>
-            {data.text.split("\n").map((line) => (
+            {contacts.text.split("\n").map((line) => (
               <span key={line}>
                 {line}
                 <br />
@@ -31,7 +31,7 @@ export function ContactPanel({ data, profile }: ContactPanelProps) {
           </p>
         </div>
         <div className="contact-links">
-          <ContactReveal sitekey={process.env.NEXT_PUBLIC_YANDEX_SMARTCAPTCHA_SITEKEY} />
+          <ContactReveal />
           <EmailCopyLink email={profile.email} />
           <a className="contact-github" href={profile.telegram} target="_blank" rel="noreferrer">
             <TelegramIcon size={20} />

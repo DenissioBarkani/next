@@ -10,8 +10,6 @@ export const site = {
     name: "Денис Баркалов",
     role: "Frontend-разработчик",
     email: "dbarkalovuc@gmail.com",
-    phone: "+7 (918) 546-32-01",
-    phoneHref: "tel:+79185463201",
     telegram: "https://t.me/DenissioBarkaniBH",
     telegramHandle: "@DenissioBarkaniBH",
     github: "https://github.com/DenissioBarkani",

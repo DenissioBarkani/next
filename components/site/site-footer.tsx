@@ -1,20 +1,15 @@
 import Link from "next/link";
 import { GitFork } from "lucide-react";
-import type { SiteProfile } from "@/content/site";
+import { site } from "@/content/site";
 
-export function SiteFooter({
-  profile,
-  year,
-}: {
-  readonly profile: SiteProfile;
-  readonly year: string;
-}) {
+export function SiteFooter() {
+  const { profile, footerYear } = site;
   return (
     <footer className="site-footer shell">
       <Link href="/" className="footer-name">
         {profile.name} <span className="blue">/</span> Frontend
       </Link>
-      <span>© {year}</span>
+      <span>© {footerYear}</span>
       <a
         href={profile.github}
         target="_blank"

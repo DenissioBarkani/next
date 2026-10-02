@@ -3,16 +3,15 @@ import { ContactPanel } from "@/components/sections/contact-panel";
 import { EducationOverview } from "@/components/sections/education-overview";
 import { ExperienceOverview } from "@/components/sections/experience-overview";
 import { Hero } from "@/components/sections/hero";
-import { ProjectShowcase } from "@/components/sections/project-showcase";
+import { ProjectCard } from "@/components/project/project-card";
+import { ArrowLink } from "@/components/site/arrow-link";
 import { homePage } from "@/content/pages";
-import { projects } from "@/content/projects";
 import { featuredProjects } from "@/lib/projects";
-import { site } from "@/content/site";
 
 export default function Home() {
   return (
     <main id="main">
-      <Hero data={homePage.hero} profile={site.profile} />
+      <Hero />
       <section className="tech-strip">
         <div className="shell">
           <span>Основной опыт</span>
@@ -25,11 +24,33 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <ProjectShowcase projects={featuredProjects} context="home" allProjectsHref="/projects" />
-      <ExperienceOverview data={homePage.experience} projects={projects} />
-      <EducationOverview data={homePage.education} />
-      <AdditionalDirections data={homePage.directions} />
-      <ContactPanel data={homePage.contacts} profile={site.profile} />
+      <section id="projects" className="section projects-section">
+        <div className="shell">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">01 / Работы</p>
+              <h2>Проекты в деталях</h2>
+            </div>
+            <p className="heading-note">
+              Продуктовая разработка,
+              <br />
+              практика и учебные проекты
+            </p>
+          </div>
+          <div className="project-grid">
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.slug} project={project} context="home" />
+            ))}
+          </div>
+          <ArrowLink href="/projects" className="projects-all-link">
+            Все проекты
+          </ArrowLink>
+        </div>
+      </section>
+      <ExperienceOverview />
+      <EducationOverview />
+      <AdditionalDirections />
+      <ContactPanel />
     </main>
   );
 }

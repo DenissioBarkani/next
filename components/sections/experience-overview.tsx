@@ -1,28 +1,24 @@
 import { Code2 } from "lucide-react";
 import Link from "next/link";
 import { EarlyProjects } from "@/components/client/early-projects";
-import type { Project } from "@/content/projects";
-import type { homePage } from "@/content/pages";
+import { homePage } from "@/content/pages";
+import { projects } from "@/content/projects";
 import { projectTimelineLabel } from "@/lib/projects";
 import { withoutFinalPeriod } from "@/lib/utils";
 
-type ExperienceOverviewProps = {
-  readonly data: typeof homePage.experience;
-  readonly projects: readonly Project[];
-};
-
-export function ExperienceOverview({ data, projects }: ExperienceOverviewProps) {
+export function ExperienceOverview() {
+  const { experience } = homePage;
   const timeline = projects.filter((project) => project.timeline);
   return (
     <section id="experience" className="section experience-section">
       <div className="shell">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{data.eyebrow}</p>
-            <h2>{data.title}</h2>
+            <p className="eyebrow">{experience.eyebrow}</p>
+            <h2>{experience.title}</h2>
           </div>
           <p className="heading-note">
-            {withoutFinalPeriod(data.note)
+            {withoutFinalPeriod(experience.note)
               .split("\n")
               .map((line) => (
                 <span key={line}>
@@ -35,7 +31,11 @@ export function ExperienceOverview({ data, projects }: ExperienceOverviewProps) 
         <div className="experience-grid">
           <div className="timeline">
             {timeline.map((project) => (
-              <Link key={project.slug} href={`/projects/${project.slug}`} className="timeline-row">
+              <Link
+                key={project.slug}
+                href={`/projects/${project.slug}?from=home`}
+                className="timeline-row"
+              >
                 <span className="timeline-date">{project.year}</span>
                 <div>
                   <span className="timeline-label">{projectTimelineLabel(project)}</span>
@@ -45,7 +45,7 @@ export function ExperienceOverview({ data, projects }: ExperienceOverviewProps) 
                 <Code2 className="timeline-icon" size={23} />
               </Link>
             ))}
-            <EarlyProjects data={data.earlyProjects} />
+            <EarlyProjects />
           </div>
         </div>
       </div>

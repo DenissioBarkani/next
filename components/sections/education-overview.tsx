@@ -1,33 +1,34 @@
 import { GraduationCap } from "lucide-react";
-import type { homePage } from "@/content/pages";
+import { homePage } from "@/content/pages";
 
-export function EducationOverview({ data }: { readonly data: typeof homePage.education }) {
+export function EducationOverview() {
+  const { education } = homePage;
   return (
     <section id="about" className="section shell education-section">
       <div className="education-heading">
-        <p className="eyebrow">{data.eyebrow}</p>
+        <p className="eyebrow">{education.eyebrow}</p>
         <h2>
-          {data.title}
+          {education.title}
           <br />
-          <span className="blue">{data.highlightedTitle}</span>
+          <span className="blue">{education.highlightedTitle}</span>
         </h2>
         <p>
-          {data.summary.split("\n").map((line) => (
+          {education.summary.split("\n").map((line) => (
             <span key={line}>
               {line}
               <br />
             </span>
           ))}
         </p>
-        <a className="text-link" href={data.link} target="_blank" rel="noreferrer">
-          {data.linkLabel} <GraduationCap size={18} />
+        <a className="text-link" href={education.link} target="_blank" rel="noreferrer">
+          {education.linkLabel} <GraduationCap size={18} />
         </a>
       </div>
       <div className="education-details">
-        <p className="education-lead">{data.lead}</p>
-        <p>{data.description}</p>
+        <p className="education-lead">{education.lead}</p>
+        <p>{education.description}</p>
         <div className="education-cells">
-          {data.cells.map((cell) => (
+          {education.cells.map((cell) => (
             <div key={cell.number}>
               <span>{cell.number}</span>
               <h3>{cell.title}</h3>

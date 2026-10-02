@@ -1,8 +1,9 @@
 import { Mail } from "lucide-react";
-import type { SiteProfile } from "@/content/site";
 import { TelegramIcon } from "@/components/site/telegram-icon";
+import { site } from "@/content/site";
 
-export function ContactBar({ profile }: { readonly profile: SiteProfile }) {
+export function ContactBar() {
+  const { profile } = site;
   return (
     <aside className="contact-bar" aria-label="Быстрые контакты">
       <div className="shell contact-bar__inner">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useId, useState } from "react";
+import { homePage } from "@/content/pages";
 
 type EarlyProject = {
   readonly period?: string;
@@ -12,15 +13,14 @@ type EarlyProject = {
   readonly linkLabel?: string;
 };
 
-type EarlyProjectsProps = {
-  readonly data: {
-    readonly title: string;
-    readonly summary: string;
-    readonly items: readonly EarlyProject[];
-  };
+type EarlyProjectsData = {
+  readonly title: string;
+  readonly summary: string;
+  readonly items: readonly EarlyProject[];
 };
 
-export function EarlyProjects({ data }: EarlyProjectsProps) {
+export function EarlyProjects() {
+  const data: EarlyProjectsData = homePage.experience.earlyProjects;
   const [isOpen, setIsOpen] = useState(false);
   const contentId = useId();
 

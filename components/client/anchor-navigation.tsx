@@ -33,9 +33,15 @@ function scrollToAnchor(id: string, behavior: ScrollBehavior) {
   const target = document.getElementById(id);
   if (!target) return false;
 
-  target.scrollIntoView({
+  const top = Math.max(
+    0,
+    window.scrollY + target.getBoundingClientRect().top - getStickyAnchorOffset(),
+  );
+
+  window.scrollTo({
+    top,
+    left: 0,
     behavior,
-    block: "start",
   });
   return true;
 }

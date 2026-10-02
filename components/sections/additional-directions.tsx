@@ -1,20 +1,21 @@
 import { ArrowRight, AudioLines, Braces, type LucideIcon } from "lucide-react";
 import Link from "next/link";
-import type { homePage } from "@/content/pages";
+import { homePage } from "@/content/pages";
 
 const icons = { audio: AudioLines, braces: Braces } satisfies Record<string, LucideIcon>;
 
-export function AdditionalDirections({ data }: { readonly data: typeof homePage.directions }) {
+export function AdditionalDirections() {
+  const { directions } = homePage;
   return (
     <section className="section shell">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">{data.eyebrow}</p>
-          <h2>{data.title}</h2>
+          <p className="eyebrow">{directions.eyebrow}</p>
+          <h2>{directions.title}</h2>
         </div>
       </div>
       <div className="more-grid">
-        {data.items.map((item) => {
+        {directions.items.map((item) => {
           const Icon = icons[item.icon];
           return (
             <Link href={item.href} className="more-card" key={item.href}>

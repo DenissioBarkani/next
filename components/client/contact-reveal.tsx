@@ -9,11 +9,8 @@ type ContactDetails = {
   readonly phone: string;
 };
 
-type ContactRevealProps = {
-  readonly sitekey: string | undefined;
-};
-
-export function ContactReveal({ sitekey }: ContactRevealProps) {
+export function ContactReveal() {
+  const sitekey = process.env.NEXT_PUBLIC_YANDEX_SMARTCAPTCHA_SITEKEY;
   const [captchaVisible, setCaptchaVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [contacts, setContacts] = useState<ContactDetails>();

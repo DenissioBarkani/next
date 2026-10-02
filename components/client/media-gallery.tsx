@@ -1,10 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -41,7 +39,7 @@ export function MediaGallery({
                   />
                 </button>
               </DialogTrigger>
-              <DialogContent className="media-dialog" showCloseButton={false}>
+              <DialogContent className="media-dialog">
                 <DialogTitle>{withoutFinalPeriod(item.caption)}</DialogTitle>
                 <DialogDescription className="sr-only">
                   Изображение проекта в увеличенном размере.
@@ -53,9 +51,6 @@ export function MediaGallery({
                   height={item.height}
                   sizes="min(1100px, calc(100vw - 32px))"
                 />
-                <DialogClose asChild>
-                  <Button variant="outline">Закрыть</Button>
-                </DialogClose>
               </DialogContent>
             </Dialog>
           )}

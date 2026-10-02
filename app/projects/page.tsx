@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ProjectShowcase } from "@/components/sections/project-showcase";
+import { ProjectCard } from "@/components/project/project-card";
 import { orderedProjects } from "@/lib/projects";
 
 export const metadata: Metadata = {
@@ -18,12 +18,25 @@ export default function ProjectsPage() {
           <span>Работы</span>
         </div>
       </div>
-      <ProjectShowcase
-        projects={orderedProjects}
-        eyebrow="Работы"
-        heading="Все проекты"
-        note={["Коммерческие, учебные", "и личные проекты"]}
-      />
+      <section id="projects" className="section projects-section">
+        <div className="shell">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Работы</p>
+              <h2>Все проекты</h2>
+            </div>
+            <p className="heading-note">
+              Коммерческие, учебные
+              <br />и личные проекты
+            </p>
+          </div>
+          <div className="project-grid">
+            {orderedProjects.map((project) => (
+              <ProjectCard key={project.slug} project={project} />
+            ))}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

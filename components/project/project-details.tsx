@@ -53,12 +53,29 @@ function ProjectRelatedNavigationFallback({ project }: { readonly project: Proje
   const navigation = resolveProjectNavigation(project.slug, null);
   return (
     <div className="related-projects">
-      <Link href={navigation.returnHref} className="arrow-link arrow-link--back">
+      <Link
+        href={navigation.returnHref}
+        className="arrow-link arrow-link--back related-projects-back"
+      >
         <ArrowLeft size={17} aria-hidden="true" />
-        {navigation.returnLabel}
+        <span className="related-projects-label related-projects-label--desktop">
+          {navigation.returnLabel}
+        </span>
+        <span className="related-projects-label related-projects-label--mobile">К работам…</span>
       </Link>
       <div className="related-projects-actions">
-        <ArrowLink href={projectHref(navigation.nextSlug)}>Следующий проект</ArrowLink>
+        <ArrowLink
+          href="/projects"
+          className="related-projects-all related-projects-all--mobile-only"
+        >
+          Все проекты
+        </ArrowLink>
+        <ArrowLink href={projectHref(navigation.nextSlug)} className="related-projects-next">
+          <span className="related-projects-label related-projects-label--desktop">
+            Следующий проект
+          </span>
+          <span className="related-projects-label related-projects-label--mobile">Следующий</span>
+        </ArrowLink>
       </div>
     </div>
   );

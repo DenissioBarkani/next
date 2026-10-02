@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { AnchorNavigation } from "@/components/client/anchor-navigation";
 import { ParticleField } from "@/components/client/particle-field";
+import { RouteScrollReset } from "@/components/client/route-scroll-reset";
 import { ContactBar } from "@/components/site/contact-bar";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -19,15 +20,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ru">
       <body>
         <AnchorNavigation />
+        <RouteScrollReset />
         <ParticleField />
         <div className="site-chrome">
           <a className="skip-link" href="#main">
             К содержимому
           </a>
-          <ContactBar profile={site.profile} />
+          <ContactBar />
           <SiteHeader profile={site.profile} navigation={site.navigation} />
           {children}
-          <SiteFooter profile={site.profile} year={site.footerYear} />
+          <SiteFooter />
         </div>
         <Analytics />
       </body>

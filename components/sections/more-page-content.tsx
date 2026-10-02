@@ -1,10 +1,11 @@
 import Link from "next/link";
-import type { MorePageData } from "@/content/pages";
 import { AccentPeriod } from "@/components/site/accent-period";
 import { ArrowLink } from "@/components/site/arrow-link";
+import { morePage, type MorePageData } from "@/content/pages";
 import { withoutFinalPeriod } from "@/lib/utils";
 
-export function MorePageContent({ data }: { readonly data: MorePageData }) {
+export function MorePageContent() {
+  const data: MorePageData = morePage;
   const [firstTitleLine, secondTitleLine] = data.title.split("\n");
   return (
     <main id="main" className="shell case-main more-page">
