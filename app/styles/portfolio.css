@@ -36,6 +36,8 @@ body{background:#fff}
 /* Контактные ссылки должны явно выглядеть интерактивными. */
 .contact-github{cursor:pointer;transition:color .2s,transform .2s,text-decoration-color .2s;text-decoration-color:transparent;text-underline-offset:4px}
 .contact-github:hover{color:var(--blue);text-decoration:underline;text-decoration-color:currentColor;transform:translateX(3px)}
+.contact-email__button{border:0;padding:0;background:transparent;color:inherit;font:inherit;line-height:inherit}
+.contact-email__status{margin:3px 0 0!important;color:var(--destructive)!important;font-size:12px!important}
 .next-project-link{display:inline-flex;align-items:center;gap:8px}
 .case-action-note{font-size:12px;color:var(--quiet);margin:12px 0 0;max-width:560px}
 

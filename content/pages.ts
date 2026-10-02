@@ -15,7 +15,7 @@ export const homePage = {
   },
   experience: {
     eyebrow: "02 / Опыт",
-    title: "От задач — к интерфейсам",
+    title: "Мой путь в разработке",
     note: "Вёрсткой занимаюсь с 2020 года.\nКоммерческий опыт — 2025–2026.",
     componentCount: "20+",
     componentCountDescription: "UI-компонентов в библиотеке\nтурнирной платформы",
