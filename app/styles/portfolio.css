@@ -42,16 +42,6 @@
   font-weight: 600;
   line-height: 1.4;
 }
-.monogram {
-  font-size: 28px;
-  letter-spacing: -2px;
-  display: flex;
-  align-items: center;
-  line-height: 1;
-}
-.monogram span {
-  color: var(--blue);
-}
 .wordmark small {
   display: block;
   color: var(--quiet);

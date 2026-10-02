@@ -40,7 +40,7 @@ export function ProjectCover({ project, detail = false }: ProjectCoverProps) {
           <div className="cover-grid" />
           <div className="cover-top">
             <span className="cover-kind">{projectKindLabel(project)}</span>
-            <Icon size={23} strokeWidth={1.4} />
+            {detail && <Icon size={23} strokeWidth={1.4} />}
           </div>
           <div className="cover-type">{headline}</div>
           <div className="cover-bottom">

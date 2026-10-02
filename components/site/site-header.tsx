@@ -61,9 +61,6 @@ export function SiteHeader({ profile, navigation }: SiteHeaderProps) {
     <header className={`site-header${isHidden ? " site-header--hidden" : ""}`}>
       <div className="shell nav-inner">
         <Link href="/" className="wordmark" aria-label={`${profile.name} — главная`}>
-          <span className="monogram">
-            DB<span>.</span>
-          </span>
           <span>
             {profile.name}
             <small>{profile.role}</small>

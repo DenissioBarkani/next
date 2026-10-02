@@ -29,6 +29,11 @@ export function MorePageContent() {
               {section.paragraphs.length === 1 ? withoutFinalPeriod(paragraph) : paragraph}
             </p>
           ))}
+          {section.href && section.linkLabel && (
+            <ArrowLink href={section.href} className="text-link">
+              {section.linkLabel}
+            </ArrowLink>
+          )}
           {section.cases?.map((item) => (
             <div key={item.title}>
               <h3>{item.title}</h3>
@@ -37,6 +42,13 @@ export function MorePageContent() {
                 <ArrowLink href={item.href} className="text-link">
                   {item.linkLabel}
                 </ArrowLink>
+              )}
+              {item.tags && (
+                <div className="tags">
+                  {item.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
               )}
             </div>
           ))}

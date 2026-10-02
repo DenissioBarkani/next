@@ -84,13 +84,20 @@ export function CodeViewer({ files }: { readonly files: readonly CodeExample[] }
               >
                 <code>
                   {tokens.map((line, index) => (
-                    <span {...getLineProps({ line, key: index })} key={index} className="code-line">
+                    <span
+                      {...getLineProps({ line })}
+                      key={`${file.path}-line-${(file.startLine ?? 1) + index}`}
+                      className="code-line"
+                    >
                       <span className="line-number" aria-hidden="true">
                         {(file.startLine ?? 1) + index}
                       </span>
                       <span className="line-code">
                         {line.map((token, tokenIndex) => (
-                          <span {...getTokenProps({ token, key: tokenIndex })} key={tokenIndex} />
+                          <span
+                            {...getTokenProps({ token })}
+                            key={`${file.path}-line-${index}-token-${tokenIndex}`}
+                          />
                         ))}
                       </span>
                     </span>
