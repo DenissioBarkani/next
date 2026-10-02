@@ -34,7 +34,7 @@ export function ProjectCaseStudy({ study }: { readonly study: ProjectCaseStudy }
       </section>
       <section id="frontend" className="case-section">
         <h2>
-          Технологии и инженерные решения{" "}
+          Ключевые моменты{" "}
           <span className="section-stars" aria-hidden="true">
             ✦ ✦ ✦
           </span>

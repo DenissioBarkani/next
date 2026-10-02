@@ -3,6 +3,7 @@ import { ArrowRight, GitFork, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CodeViewer } from "@/components/client/code-viewer";
 import { MediaGallery } from "@/components/client/media-gallery";
+import { ProjectToc, type ProjectTocItem } from "@/components/client/project-toc";
 import { ProjectCaseStudy } from "@/components/project/project-case-study";
 import { ProjectCover } from "@/components/project/project-cover";
 import type { Project, ProjectTask } from "@/content/projects";
@@ -36,6 +37,22 @@ export function ProjectDetails({ project, nextProject }: ProjectDetailsProps) {
     !project.demo ? project.unavailable?.demo : undefined,
     !project.repo ? project.unavailable?.repo : undefined,
   ].filter((note): note is string => Boolean(note));
+  const tocItems: readonly ProjectTocItem[] = caseStudy
+    ? [
+        { id: "task", label: "Задача и роль" },
+        { id: "contribution", label: "Мой вклад" },
+        { id: "frontend", label: "Ключевые моменты" },
+        { id: "result", label: "Результат" },
+      ]
+    : [
+        ...(project.context ? [{ id: "about", label: "О проекте" }] : []),
+        { id: "contribution", label: "Мой вклад" },
+        ...(project.decisions.length > 0 ? [{ id: "decisions", label: "Ключевые моменты" }] : []),
+        ...(project.demoNote ? [{ id: "demo", label: "Демонстрация" }] : []),
+        ...(project.media.length > 0 ? [{ id: "media", label: "Интерфейсы" }] : []),
+        { id: "result", label: "Результат" },
+        ...(project.examples.length > 0 ? [{ id: "code", label: "Исходный код" }] : []),
+      ];
 
   return (
     <main id="main" className="shell case-main">
@@ -118,27 +135,7 @@ export function ProjectDetails({ project, nextProject }: ProjectDetailsProps) {
         </aside>
       </section>
       <div className="case-body">
-        <nav className="case-toc" aria-label="Разделы проекта">
-          <p className="eyebrow">В этом проекте</p>
-          {caseStudy ? (
-            <>
-              <a href="#task">Задача</a>
-              <a href="#contribution">Мой вклад</a>
-              <a href="#frontend">Frontend</a>
-              <a href="#result">Результат</a>
-            </>
-          ) : (
-            <>
-              {project.context && <a href="#about">О проекте</a>}
-              <a href="#contribution">Мой вклад</a>
-              {project.decisions.length > 0 && <a href="#decisions">Решения и стек</a>}
-              {project.demoNote && <a href="#demo">Демонстрация</a>}
-              {project.media.length > 0 && <a href="#media">Интерфейсы</a>}
-              <a href="#result">Результат</a>
-              {project.examples.length > 0 && <a href="#code">Исходный код</a>}
-            </>
-          )}
-        </nav>
+        <ProjectToc items={tocItems} />
         <div className="case-content">
           {caseStudy ? (
             <ProjectCaseStudy study={caseStudy} />
@@ -168,7 +165,7 @@ export function ProjectDetails({ project, nextProject }: ProjectDetailsProps) {
               </section>
               {project.decisions.length > 0 && (
                 <section id="decisions" className="case-section">
-                  <h2>Решения и технологии</h2>
+                  <h2>Ключевые моменты</h2>
                   <div className="decision-grid">
                     {project.decisions.map((decision) => (
                       <div className="decision" key={decision.title}>

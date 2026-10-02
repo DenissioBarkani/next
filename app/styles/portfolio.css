@@ -713,6 +713,7 @@ h2 {
   margin-top: 23px;
 }
 .case-body {
+  min-width: 0;
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 72px;
@@ -725,14 +726,29 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  padding-top: 20px;
   font-size: 13px;
   color: var(--quiet);
 }
-.case-toc a:hover {
-  color: var(--blue);
-}
-.case-toc .eyebrow {
+.case-toc__heading .eyebrow {
   margin: 0 0 8px;
+}
+.case-toc__hint {
+  display: none;
+}
+.case-toc__links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.case-toc a {
+  transition: color 0.2s;
+}
+.case-toc a span {
+  display: none;
+}
+.case-toc a[aria-current="location"] {
+  color: var(--blue);
 }
 .case-section {
   margin-bottom: 55px;
@@ -1232,16 +1248,71 @@ h2 {
     margin-top: 35px;
   }
   .case-toc {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 12px 22px;
-    font-size: 12px;
-    padding-bottom: 24px;
+    position: sticky;
+    top: 60px;
+    z-index: 40;
+    display: block;
+    margin-inline: -20px;
+    min-width: 0;
+    padding-top: 0;
     border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.96);
+    transition: top 0.2s ease;
   }
-  .case-toc .eyebrow {
+  html[data-mobile-header-hidden] .case-toc {
+    top: 0;
+  }
+  .case-toc__heading,
+  .case-toc__hint {
     display: none;
+  }
+  .case-toc__links {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    overflow-x: auto;
+    min-width: 0;
+    padding-inline: 20px;
+    scrollbar-width: none;
+  }
+  .case-toc__links::-webkit-scrollbar {
+    display: none;
+  }
+  .case-toc a {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    min-height: 44px;
+    align-items: center;
+    padding: 11px 13px 10px;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .case-toc a[aria-current="location"] {
+    color: var(--blue);
+  }
+  .case-toc a[aria-current="location"]::before {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    left: -1px;
+    height: 2px;
+    background: var(--blue);
+    content: "";
+  }
+  .site-header {
+    transition: transform 0.2s ease;
+  }
+  .site-header--hidden {
+    transform: translateY(-100%);
+  }
+  .case-section {
+    scroll-margin-top: 112px;
+  }
+  html[data-mobile-header-hidden] .case-section {
+    scroll-margin-top: 56px;
   }
   .decision-grid {
     grid-template-columns: 1fr;
